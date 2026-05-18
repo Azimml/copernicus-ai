@@ -1,0 +1,23 @@
+# Railway deployment config — https://docs.railway.com/reference/config-as-code
+#
+# Railway autodetects the Dockerfile, so this file mostly tunes the
+# deployment policy (restart on crash, healthcheck, instance size).
+
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile"
+
+[deploy]
+# Railway pings this on every deploy; if it doesn't go 200 within
+# healthcheckTimeout seconds the deploy is rolled back.
+healthcheckPath = "/api/health"
+healthcheckTimeout = 60
+
+# Number of replicas. 1 is plenty for the demo — internal uvicorn workers
+# (WORKERS=2 by default in the Dockerfile) handle concurrency within the
+# single replica.
+numReplicas = 1
+
+# Restart on crash but cap retries so a bad deploy doesn't burn credit.
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 3

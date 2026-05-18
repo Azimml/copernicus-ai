@@ -1,0 +1,30 @@
+# Keep the image small — don't ship dev clutter.
+.venv
+.git
+.gitignore
+.github
+__pycache__
+**/__pycache__
+*.pyc
+*.pyo
+
+# Runtime artefacts (would otherwise overwrite a fresh container's empty state)
+*.db-wal
+*.db-shm
+*.db-journal
+data/warmup.lock
+
+# Local-only files
+.env
+.env.local
+.env.*.local
+.vscode
+.idea
+*.swp
+
+# Docs / screenshots aren't needed inside the container
+doc/screenshots
+README.md
+
+# Old project that lives in this monorepo-ish directory
+japan_ai-main

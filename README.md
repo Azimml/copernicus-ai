@@ -280,6 +280,34 @@ copernicus-ai/
 
 ---
 
+## 🚆 Deploy to Railway in 5 minutes
+
+The repo ships with a `Dockerfile` + `railway.toml` so deployment is a
+**one-click** affair.
+
+1. Go to **[railway.com](https://railway.com)** → sign in with GitHub.
+2. **New Project** → **Deploy from GitHub repo** → pick `Azimml/copernicus-ai`.
+3. Railway detects the Dockerfile and starts building (~3-5 min on first build).
+4. While it's building, go to **Variables** and paste your `.env` values
+   (at minimum `OPENAI_API_KEY`, `SMTP_HOST`, `SMTP_USER`, `SMTP_PASSWORD`,
+   `SMTP_FROM`, `ADMIN_TOKEN`).
+5. Once the build is green, click **Settings → Networking → Generate Domain**
+   to get a `yourapp.up.railway.app` URL.
+6. (Optional) **Settings → Custom Domain** → add your own domain. Railway
+   gives you a CNAME target; add it to your DNS provider. HTTPS is automatic.
+
+The repo's defaults are tuned for Railway's free $5 trial credit:
+
+- `WORKERS=2` keeps RAM around ~500 MB (~$0.20/day on Railway)
+- `healthcheckPath=/api/health` for zero-downtime redeploys
+- SQLite + crawled index ship in the image, so the first request works
+  immediately without running `make index`
+
+For long-term production, mount a **volume at `/app/data`** so chat logs,
+support requests, and analytics persist across container restarts.
+
+---
+
 ## 🚢 Deployment notes
 
 - The service runs as **multiple uvicorn workers** in a single process tree
