@@ -6,7 +6,6 @@ too (the legacy JSON files won't exist and it'll just exit).
 Migrates:
 - data/raw/chat_logs.json        -> chat_logs table
 - data/raw/handoffs.json         -> handoffs + handoff_messages tables
-- data/raw/operator_outbox.json  -> operator_outbox table
 - data/analytics/events.jsonl    -> analytics_events table
 
 The JSON files are left in place after migration; delete them manually
@@ -112,40 +111,6 @@ def migrate_handoffs() -> int:
     return n
 
 
-def migrate_operator_outbox() -> int:
-    src = DATA_DIR / "raw" / "operator_outbox.json"
-    if not src.exists():
-        return 0
-    payload = json.loads(src.read_bytes())
-    items_map = payload.get("items", {}) if isinstance(payload, dict) else {}
-    n = 0
-    with connect() as conn:
-        for session_id, queue in items_map.items():
-            if not isinstance(queue, list):
-                continue
-            for msg in queue:
-                msg_id = msg.get("id")
-                if not msg_id:
-                    continue
-                row = conn.execute("SELECT 1 FROM operator_outbox WHERE id = ?", (msg_id,)).fetchone()
-                if row:
-                    continue
-                conn.execute(
-                    "INSERT INTO operator_outbox (id, session_id, role, operator_name, text, created_at) "
-                    "VALUES (?, ?, ?, ?, ?, ?)",
-                    (
-                        msg_id,
-                        session_id,
-                        msg.get("role", "operator"),
-                        msg.get("operator_name", "Operator"),
-                        (msg.get("text") or "")[:4000],
-                        msg.get("created_at", ""),
-                    ),
-                )
-                n += 1
-    return n
-
-
 def migrate_analytics() -> int:
     src = DATA_DIR / "analytics" / "events.jsonl"
     if not src.exists():
@@ -201,9 +166,8 @@ def main() -> None:
     db_init()
     a = migrate_chat_logs()
     b = migrate_handoffs()
-    c = migrate_operator_outbox()
     d = migrate_analytics()
-    print(f"Migrated: {a} chat_logs, {b} handoffs, {c} operator_outbox, {d} analytics_events.")
+    print(f"Migrated: {a} chat_logs, {b} handoffs, {d} analytics_events.")
     print("Source JSON files left in place — delete after verifying the SQLite data.")
 
 

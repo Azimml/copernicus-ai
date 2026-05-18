@@ -152,6 +152,7 @@
         state.currentHandoff = h;
         $("#handoff-modal").style.display = "flex";
         var contact = h.contact || {};
+        var emailTo = contact.email || "";
         var msgs = (h.messages || []).map(function (m) {
           return '<div class="msg ' + escapeHTML(m.role) + '">' +
                  '  <div class="role">' + escapeHTML(m.operator_name || m.role) + ' · ' + escapeHTML(m.created_at || "") + '</div>' +
@@ -159,10 +160,28 @@
                  '</div>';
         }).join("");
         $("#handoff-detail").innerHTML =
-          '<p><strong>From:</strong> ' + escapeHTML(contact.name || "Anonymous") + ' (' + escapeHTML(contact.email || "—") + ')</p>' +
+          '<p><strong>From:</strong> ' + escapeHTML(contact.name || "Anonymous") +
+          ' (<a href="mailto:' + escapeHTML(emailTo) + '">' + escapeHTML(emailTo || "—") + '</a>)</p>' +
           '<p><strong>Status:</strong> ' + escapeHTML(h.status) + ' · <strong>AI:</strong> ' + (h.ai_enabled ? "enabled" : "disabled") + '</p>' +
-          '<p><strong>Session:</strong> ' + escapeHTML(h.session_id || "—") + '</p>' +
+          '<p class="hint" style="margin-top:6px">✉️ Your reply will be sent as an email to <b>' + escapeHTML(emailTo || "—") + '</b>.</p>' +
           msgs;
+        // If we just sent a reply, openHandoff is called with a `last_email`
+        // attached — surface a toast-style status row.
+        if (h.last_email) {
+          var cls = h.last_email.status === "sent" ? "msg assistant" : "msg operator";
+          var icon = h.last_email.status === "sent" ? "✓" : (h.last_email.status === "skipped" ? "⚠" : "✗");
+          var note = h.last_email.status === "sent"
+            ? "Email sent to " + (h.last_email.to || "(unknown)")
+            : h.last_email.status === "skipped"
+              ? "Reply saved but email NOT sent — SMTP is not configured (set SMTP_HOST in .env)"
+              : "Email delivery FAILED: " + (h.last_email.error || "unknown error");
+          $("#handoff-detail").insertAdjacentHTML(
+            "beforeend",
+            '<div class="' + cls + '" style="border-left:3px solid ' +
+            (h.last_email.status === "sent" ? "#10b981" : (h.last_email.status === "skipped" ? "#f59e0b" : "#ef4444")) +
+            ';"><div class="role">Email</div>' + icon + " " + escapeHTML(note) + '</div>'
+          );
+        }
       })
       .catch(function (e) { alert(e.message); });
   }
@@ -173,12 +192,22 @@
     var h = state.currentHandoff; if (!h) return;
     var msg = $("#handoff-reply").value.trim();
     if (!msg) return;
+    var btn = $("#send-reply");
+    btn.disabled = true;
+    btn.textContent = "Sending…";
     api("/api/admin/handoffs/" + encodeURIComponent(h.id) + "/reply", {
       method: "POST",
       body: JSON.stringify({ message: msg, operator_name: "Copernicus Team" }),
     })
-      .then(function () { $("#handoff-reply").value = ""; openHandoff(h.id); loadHandoffs(); })
-      .catch(function (e) { alert(e.message); });
+      .then(function (updated) {
+        $("#handoff-reply").value = "";
+        // Re-render the modal with the freshly returned `last_email` block.
+        state.currentHandoff = updated;
+        openHandoff(h.id);
+        loadHandoffs();
+      })
+      .catch(function (e) { alert(e.message); })
+      .then(function () { btn.disabled = false; btn.textContent = "Send"; });
   }
 
   function toggleAi() {

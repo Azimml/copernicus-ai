@@ -39,6 +39,17 @@ class Settings(BaseSettings):
 
     admin_token: str = Field(default="change-me")
 
+    # SMTP for operator replies. Leave SMTP_HOST blank to disable email
+    # sending (replies will still be recorded in the handoff log).
+    smtp_host: str = Field(default="")
+    smtp_port: int = Field(default=587)
+    smtp_user: str = Field(default="")
+    smtp_password: str = Field(default="")
+    smtp_use_tls: bool = Field(default=True)
+    smtp_from: str = Field(default="")
+    smtp_from_name: str = Field(default="Copernicus Berlin")
+    smtp_reply_to: str = Field(default="")
+
 
 settings = Settings()
 RAW_DIR.mkdir(parents=True, exist_ok=True)

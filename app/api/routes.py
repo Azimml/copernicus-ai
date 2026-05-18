@@ -4,7 +4,7 @@ import json
 from time import monotonic
 from typing import List
 
-from fastapi import APIRouter, Header, HTTPException, Query
+from fastapi import APIRouter, Header, HTTPException
 from fastapi.responses import StreamingResponse
 
 from app.core.config import settings
@@ -45,7 +45,6 @@ from app.services.handoff import (
 from app.services.indexer import delete_faq_index, upsert_faq_index
 from app.services.link_rules import delete_link_rule, list_link_rules, upsert_link_rule
 from app.services.monitoring import runtime_monitor
-from app.services.operator_bridge import list_operator_messages
 from app.services.quick_actions import (
     find_manual_quick_action,
     list_public_quick_actions,
@@ -313,12 +312,6 @@ def chat_satisfaction(payload: SatisfactionFeedbackRequest) -> dict:
         satisfaction=payload.response,
     )
     return {"ok": True}
-
-
-@router.get("/chat/inbox")
-def chat_inbox(session_id: str, after_id: str | None = Query(default=None)) -> dict:
-    items = list_operator_messages(session_id=session_id, after_id=after_id, limit=100)
-    return {"items": items}
 
 
 def _verify_admin_token(token: str | None) -> None:

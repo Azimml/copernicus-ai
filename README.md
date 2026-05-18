@@ -195,6 +195,49 @@ See [.env.example](.env.example) for the full list.
 
 ---
 
+## ✉️ Email replies to support requests
+
+When a visitor submits the **Contact a human** form, the admin sees the
+request in the dashboard. When the admin replies, the message is sent as an
+email to the address the visitor provided — **not** back into the chat
+widget.
+
+Configure SMTP in `.env`. Examples:
+
+**Gmail** (use an [App Password](https://myaccount.google.com/apppasswords),
+not your account password):
+```env
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=replies@yourdomain.com
+SMTP_PASSWORD=xxxx-xxxx-xxxx-xxxx
+SMTP_USE_TLS=true
+SMTP_FROM=replies@yourdomain.com
+SMTP_FROM_NAME=Copernicus Berlin
+```
+
+**Mailgun** (or any standard SMTP provider — Postmark, SendGrid, AWS SES,
+Resend SMTP, Sendinblue, etc.):
+```env
+SMTP_HOST=smtp.mailgun.org
+SMTP_PORT=587
+SMTP_USER=postmaster@mg.yourdomain.com
+SMTP_PASSWORD=your-mailgun-smtp-password
+SMTP_USE_TLS=true
+SMTP_FROM=replies@yourdomain.com
+SMTP_FROM_NAME=Copernicus Berlin
+SMTP_REPLY_TO=team@copernicusberlin.org
+```
+
+If `SMTP_HOST` is empty, the reply is still recorded in the handoff log but
+no email leaves the server. The admin modal shows a clear warning:
+**⚠ Reply saved but email NOT sent — SMTP is not configured**.
+
+Successful sends show **✓ Email sent to user@example.com**; failures show
+the SMTP error so you can debug.
+
+---
+
 ## 📁 Project structure
 
 ```

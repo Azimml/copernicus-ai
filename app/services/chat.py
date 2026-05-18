@@ -222,8 +222,8 @@ class ChatService:
 
     def _human_handoff_ack(self) -> str:
         return (
-            "Sure — I'll let our team know. You can also use the **“Contact a human”** "
-            "button to leave your name and email, and someone from Copernicus Berlin will get back to you."
+            "Sure — tap the **✉ button** at the top to leave your name and email. "
+            "Someone from Copernicus Berlin will reply to your email shortly."
         )
 
     @staticmethod

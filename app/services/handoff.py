@@ -6,7 +6,7 @@ from uuid import uuid4
 
 from app.core.db import connect
 from app.services.chat_log import append_log
-from app.services.operator_bridge import enqueue_operator_message
+from app.services import email as email_service
 
 
 def _now_iso() -> str:
@@ -152,31 +152,87 @@ def resolve_handoff(handoff_id: str, note: str = "") -> dict | None:
 
 
 def add_operator_reply(handoff_id: str, message: str, operator_name: str = "Operator") -> dict | None:
+    """Send the operator's reply via email to the address on the support form.
+
+    The reply is stored in the handoff message log either way (so the admin
+    has a record). If SMTP isn't configured the call still succeeds — the
+    reply is logged with a clear "email skipped" marker so admin can see
+    that no message left the server.
+    """
     text = (message or "").strip()
     if not text:
         return None
     now = _now_iso()
+
+    handoff = get_handoff(handoff_id)
+    if not handoff:
+        return None
+
+    contact = handoff.get("contact") or {}
+    to_email = (contact.get("email") or "").strip()
+    to_name = (contact.get("name") or "").strip()
+    original_question = handoff.get("user_message") or ""
+
+    # Try to send email first so we can record the outcome alongside the
+    # message row. The reply is still saved even if delivery fails.
+    if to_email:
+        result = email_service.send_operator_reply(
+            to_email=to_email,
+            to_name=to_name,
+            operator_name=operator_name,
+            original_question=original_question,
+            reply_body=text,
+        )
+    else:
+        result = email_service.EmailResult(ok=False, error="No email address on file for this request")
+
+    if result.ok:
+        email_status = "sent"
+        email_error = ""
+    elif result.skipped:
+        email_status = "skipped"
+        email_error = result.error
+    else:
+        email_status = "failed"
+        email_error = result.error
+
+    annotated_text = text[:4000]
+
     with connect() as conn:
-        row = conn.execute(
-            "SELECT id, session_id, channel FROM handoffs WHERE id = ?", (handoff_id,)
-        ).fetchone()
-        if not row:
-            return None
         conn.execute(
             "INSERT INTO handoff_messages (handoff_id, role, operator_name, text, created_at) "
             "VALUES (?, 'operator', ?, ?, ?)",
-            (handoff_id, operator_name, text[:4000], now),
+            (handoff_id, operator_name, annotated_text, now),
         )
         conn.execute(
             "UPDATE handoffs SET updated_at=?, ai_enabled=0 WHERE id=?",
             (now, handoff_id),
         )
-        session_id = row["session_id"]
 
+    session_id = handoff.get("session_id") or ""
     if session_id:
-        enqueue_operator_message(session_id=session_id, message=text, operator_name=operator_name)
-        append_log(session_id=session_id, role="operator", text=text)
-    return get_handoff(handoff_id)
+        append_log(
+            session_id=session_id,
+            role="operator",
+            text=text,
+            meta={
+                "kind": "operator_email_reply",
+                "email_status": email_status,
+                "email_to": to_email,
+                "email_error": email_error,
+            },
+        )
+
+    # Return the latest handoff plus a small ``last_email`` block so the
+    # admin UI can show "✓ Email sent" / "✗ Email failed: …".
+    out = get_handoff(handoff_id)
+    if out is not None:
+        out["last_email"] = {
+            "to": to_email,
+            "status": email_status,
+            "error": email_error,
+        }
+    return out
 
 
 def set_handoff_ai_enabled(handoff_id: str, ai_enabled: bool) -> dict | None:

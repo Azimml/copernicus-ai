@@ -51,8 +51,6 @@
     quickActions: [],
     sending: false,
     started: false,
-    operatorPoll: null,
-    lastOperatorMsgId: null,
     satisfactionShown: false,
   };
 
@@ -95,7 +93,6 @@
     document.getElementById("cb-contact").addEventListener("click", function () { openSupportModal(""); });
 
     loadQuickActions().then(showWelcome);
-    startOperatorPolling();
   }
 
   function showWelcome() {
@@ -301,7 +298,6 @@
     }).catch(function () {});
     state.sessionId = uuid();
     try { localStorage.setItem(SESSION_KEY, state.sessionId); } catch (e) {}
-    state.lastOperatorMsgId = null;
     state.started = false;
     state.satisfactionShown = false;
     body.innerHTML = "";
@@ -363,28 +359,6 @@
           appendBot("Sorry — could not submit the form. Please try again later.");
         });
     });
-  }
-
-  /* Operator inbox polling */
-  function startOperatorPolling() {
-    if (state.operatorPoll) clearInterval(state.operatorPoll);
-    state.operatorPoll = setInterval(pollOperator, 5000);
-  }
-
-  function pollOperator() {
-    var sid = state.sessionId;
-    if (!sid) return;
-    var url = api("/api/chat/inbox?session_id=" + encodeURIComponent(sid));
-    if (state.lastOperatorMsgId) url += "&after_id=" + encodeURIComponent(state.lastOperatorMsgId);
-    fetch(url)
-      .then(function (r) { return r.ok ? r.json() : { items: [] }; })
-      .then(function (data) {
-        (data.items || []).forEach(function (m) {
-          state.lastOperatorMsgId = m.id;
-          appendBot("**" + (m.operator_name || "Operator") + ":** " + (m.text || ""));
-        });
-      })
-      .catch(function () {});
   }
 
   if (document.readyState === "loading") {

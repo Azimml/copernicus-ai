@@ -82,16 +82,6 @@ CREATE TABLE IF NOT EXISTS handoff_messages (
 );
 CREATE INDEX IF NOT EXISTS idx_handoff_messages ON handoff_messages (handoff_id, created_at);
 
-CREATE TABLE IF NOT EXISTS operator_outbox (
-    id              TEXT PRIMARY KEY,
-    session_id      TEXT NOT NULL,
-    role            TEXT NOT NULL DEFAULT 'operator',
-    operator_name   TEXT NOT NULL DEFAULT 'Operator',
-    text            TEXT NOT NULL,
-    created_at      TEXT NOT NULL
-);
-CREATE INDEX IF NOT EXISTS idx_outbox_session ON operator_outbox (session_id, created_at);
-
 CREATE TABLE IF NOT EXISTS analytics_events (
     id              INTEGER PRIMARY KEY AUTOINCREMENT,
     ts              TEXT NOT NULL,
