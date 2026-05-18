@@ -2,14 +2,13 @@
   "use strict";
 
   var SESSION_KEY = "cb_session_id";
-  var NAME_KEY = "cb_user_name";
-  var EMAIL_KEY = "cb_user_email";
   var baseUrl = (window.CB_WIDGET_BASE_URL || "").replace(/\/$/, "") || "";
 
-  function getStored(k) { try { return localStorage.getItem(k) || ""; } catch (e) { return ""; } }
-  function setStored(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
-
   function api(path) { return (baseUrl || "") + path; }
+
+  // One-time cleanup of legacy keys from an earlier version that stored
+  // visitor name/email locally. Keeps the browser tidy for returning users.
+  try { localStorage.removeItem("cb_user_name"); localStorage.removeItem("cb_user_email"); } catch (e) {}
 
   function uuid() {
     if (crypto && crypto.randomUUID) return crypto.randomUUID();
@@ -46,8 +45,6 @@
 
   var state = {
     sessionId: getSession(),
-    userName: getStored(NAME_KEY),
-    userEmail: getStored(EMAIL_KEY),
     quickActions: [],
     sending: false,
     started: false,
@@ -130,19 +127,10 @@
 
   function appendUser(text) {
     if (!state.started) hideWelcome();
-    var wrap = document.createElement("div");
-    wrap.className = "cb-msg-group cb-msg-group-user";
-    if (state.userName) {
-      var label = document.createElement("div");
-      label.className = "cb-msg-label";
-      label.textContent = state.userName;
-      wrap.appendChild(label);
-    }
     var el = document.createElement("div");
     el.className = "cb-msg user";
     el.textContent = text;
-    wrap.appendChild(el);
-    body.appendChild(wrap);
+    body.appendChild(el);
     scrollDown();
   }
 
@@ -315,11 +303,11 @@
     bg.innerHTML =
       '<div class="cb-modal">' +
       '  <h3>Contact Copernicus Berlin</h3>' +
-      '  <p>Leave your name and email. Someone from our team will reply directly.</p>' +
+      '  <p>Leave your name and email. Someone from our team will reply to your email directly.</p>' +
       '  <label>Your name</label>' +
-      '  <input id="cb-sf-name" type="text" maxlength="120" value="' + escapeHTML(state.userName) + '" />' +
+      '  <input id="cb-sf-name" type="text" maxlength="120" autocomplete="off" />' +
       '  <label>Email</label>' +
-      '  <input id="cb-sf-email" type="email" maxlength="160" value="' + escapeHTML(state.userEmail) + '" />' +
+      '  <input id="cb-sf-email" type="email" maxlength="160" autocomplete="off" />' +
       '  <label>Your question</label>' +
       '  <textarea id="cb-sf-q" maxlength="4000">' + escapeHTML(prefill || "") + '</textarea>' +
       '  <div class="cb-modal-actions">' +
@@ -335,12 +323,6 @@
       var email = document.getElementById("cb-sf-email").value.trim();
       var q = document.getElementById("cb-sf-q").value.trim();
       if (!name || !email || !q) { alert("Please fill in all fields."); return; }
-      // Save name+email so future user messages get a name label and the
-      // form pre-fills on next open.
-      state.userName = name;
-      state.userEmail = email;
-      setStored(NAME_KEY, name);
-      setStored(EMAIL_KEY, email);
       fetch(api("/api/chat/support"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -349,8 +331,8 @@
         .then(function (r) { return r.ok ? r.json() : Promise.reject(r); })
         .then(function (resp) {
           bg.remove();
-          // Echo the question as a user bubble (now labelled with their name)
-          // so the conversation history shows what was submitted.
+          // Echo the question as a user bubble so the conversation history
+          // shows what was submitted.
           appendUser(q);
           appendBot(resp.message || "Thanks! We'll be in touch.");
         })

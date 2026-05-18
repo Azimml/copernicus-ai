@@ -620,6 +620,9 @@ textarea { resize: vertical; }
   display: flex; gap: 8px; align-items: center; }
 .modal-actions input { flex: 1; }
 
+/* Read-only mode (session-history viewer) hides reply controls. */
+.modal-readonly .modal-actions { display: none; }
+
 .msg {
   border-radius: 10px; padding: 10px 12px; margin-bottom: 8px;
   font-size: 13.5px; line-height: 1.45; white-space: pre-wrap;

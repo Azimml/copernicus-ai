@@ -150,7 +150,11 @@
     api("/api/admin/handoffs/" + encodeURIComponent(id))
       .then(function (h) {
         state.currentHandoff = h;
-        $("#handoff-modal").style.display = "flex";
+        var modal = $("#handoff-modal");
+        modal.style.display = "flex";
+        modal.classList.remove("modal-readonly");
+        var head = modal.querySelector(".modal-head h3");
+        if (head) head.textContent = "Support request";
         var contact = h.contact || {};
         var emailTo = contact.email || "";
         var msgs = (h.messages || []).map(function (m) {
@@ -186,7 +190,12 @@
       .catch(function (e) { alert(e.message); });
   }
 
-  function closeHandoffModal() { $("#handoff-modal").style.display = "none"; state.currentHandoff = null; }
+  function closeHandoffModal() {
+    var modal = $("#handoff-modal");
+    modal.style.display = "none";
+    modal.classList.remove("modal-readonly");
+    state.currentHandoff = null;
+  }
 
   function sendReply() {
     var h = state.currentHandoff; if (!h) return;
@@ -284,9 +293,15 @@
     api("/api/admin/sessions/" + encodeURIComponent(sid) + "?limit=200")
       .then(function (data) {
         state.currentHandoff = null;
-        $("#handoff-modal").style.display = "flex";
+        var modal = $("#handoff-modal");
+        modal.style.display = "flex";
+        // Read-only mode: hide the Reply / Toggle AI / Resolve controls and
+        // rename the header — session history is just a transcript viewer.
+        modal.classList.add("modal-readonly");
+        var head = modal.querySelector(".modal-head h3");
+        if (head) head.textContent = "Session transcript";
         $("#handoff-detail").innerHTML =
-          '<p><strong>Session:</strong> ' + escapeHTML(sid) + '</p>' +
+          '<p><strong>Session:</strong> <code>' + escapeHTML(sid) + '</code></p>' +
           (data.items || []).map(function (m) {
             return '<div class="msg ' + escapeHTML(m.role) + '">' +
                    '  <div class="role">' + escapeHTML(m.role) + ' · ' + escapeHTML(m.ts || "") + '</div>' +

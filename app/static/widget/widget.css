@@ -131,24 +131,6 @@ html, body { margin: 0; padding: 0; font-family: "Poppins", "Inter", system-ui, 
   border-color: var(--cb-blue);
 }
 
-/* User message group — small name label above the bubble */
-.cb-msg-group {
-  display: flex;
-  flex-direction: column;
-  max-width: 92%;
-}
-.cb-msg-group-user {
-  align-self: flex-end;
-  align-items: flex-end;
-}
-.cb-msg-label {
-  font-size: 11px;
-  color: var(--cb-muted);
-  margin: 0 8px 3px;
-  letter-spacing: 0.2px;
-  font-weight: 500;
-}
-
 /* Messages */
 .cb-msg {
   display: block;
