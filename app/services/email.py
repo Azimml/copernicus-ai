@@ -75,7 +75,11 @@ def send_operator_reply(
     msg = EmailMessage()
     msg["Subject"] = subject
     msg["From"] = formataddr((settings.smtp_from_name or "Copernicus Berlin", settings.smtp_from))
-    msg["To"] = formataddr((to_name or "", to_email))
+    # Bare email on the To: header. Resend (and a few stricter providers) do
+    # exact-match validation on the recipient envelope in unverified-domain
+    # mode and reject ``"Name" <email>``. The greeting already personalises
+    # the message inside the body — display-name in headers adds nothing.
+    msg["To"] = to_email
     if settings.smtp_reply_to:
         msg["Reply-To"] = settings.smtp_reply_to
     msg["Message-ID"] = make_msgid(domain=settings.smtp_from.rsplit("@", 1)[-1])

@@ -204,8 +204,26 @@ widget.
 
 Configure SMTP in `.env`. Examples:
 
-**Gmail** (use an [App Password](https://myaccount.google.com/apppasswords),
-not your account password):
+**🚀 Resend** *(recommended for demos — free, no credit card, 5-minute setup)*
+
+[Resend](https://resend.com) gives you 100 emails/day and 3,000/month for
+free. You can start sending immediately to your registered account email
+without verifying a domain — perfect for a demo. For production, add one
+DNS record at [resend.com/domains](https://resend.com/domains) to send from
+your own domain.
+
+```env
+SMTP_HOST=smtp.resend.com
+SMTP_PORT=587
+SMTP_USER=resend
+SMTP_PASSWORD=re_xxxxxxxxxxxxxxxxxxxx
+SMTP_USE_TLS=true
+SMTP_FROM=onboarding@resend.dev   # testing; swap for chat@yourdomain after verifying
+SMTP_FROM_NAME=Copernicus Berlin
+```
+
+**Gmail** *(use an [App Password](https://myaccount.google.com/apppasswords),
+not your account password):*
 ```env
 SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
@@ -216,8 +234,8 @@ SMTP_FROM=replies@yourdomain.com
 SMTP_FROM_NAME=Copernicus Berlin
 ```
 
-**Mailgun** (or any standard SMTP provider — Postmark, SendGrid, AWS SES,
-Resend SMTP, Sendinblue, etc.):
+**Mailgun** *(or any other standard SMTP provider — Postmark, SendGrid,
+AWS SES, Sendinblue, etc.):*
 ```env
 SMTP_HOST=smtp.mailgun.org
 SMTP_PORT=587
