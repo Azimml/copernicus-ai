@@ -20,7 +20,7 @@ class Settings(BaseSettings):
     app_base_url: str = Field(default="")
 
     openai_api_key: str = Field(default="")
-    openai_chat_model: str = Field(default="gpt-4.1-mini")
+    openai_chat_model: str = Field(default="gpt-4o-mini")
     openai_embedding_model: str = Field(default="text-embedding-3-large")
 
     site_root: str = Field(default="https://copernicusberlin.org")

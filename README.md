@@ -12,7 +12,7 @@
   <p>
     <img alt="Python" src="https://img.shields.io/badge/Python-3.11+-3776AB?style=flat-square&logo=python&logoColor=white">
     <img alt="FastAPI" src="https://img.shields.io/badge/FastAPI-0.116-009688?style=flat-square&logo=fastapi&logoColor=white">
-    <img alt="OpenAI" src="https://img.shields.io/badge/OpenAI-gpt--4.1--mini-412991?style=flat-square&logo=openai&logoColor=white">
+    <img alt="OpenAI" src="https://img.shields.io/badge/OpenAI-gpt--4o--mini-412991?style=flat-square&logo=openai&logoColor=white">
     <img alt="Playwright" src="https://img.shields.io/badge/Playwright-Chromium-2EAD33?style=flat-square&logo=playwright&logoColor=white">
     <img alt="Status" src="https://img.shields.io/badge/Status-Production%20Ready-EE7625?style=flat-square">
   </p>
@@ -86,7 +86,7 @@ outbound links, and track usage analytics — all from one polished UI.
 | **Backend** | FastAPI · Python 3.11+ | Async, typed, well-documented |
 | **Crawler** | Playwright (headless Chromium) | The Copernicus website is a client-rendered React SPA, so a normal HTTP crawler sees nothing |
 | **Retrieval** | OpenAI `text-embedding-3-large` + BM25 lexical search | Hybrid scoring with URL-slug-aware boosting keeps program-specific facts (e.g. IES vs PIR scholarships) from getting mixed up |
-| **Chat model** | OpenAI `gpt-4.1-mini`, streaming | Fast first-token, strict context grounding |
+| **Chat model** | OpenAI `gpt-4o-mini`, streaming | Fast first-token, strict context grounding |
 | **Storage** | JSON files under `data/` | No database required — easy to back up, restore, and inspect |
 | **Frontend** | Vanilla HTML / CSS / JS | No build step, no framework, instant edits |
 
@@ -182,7 +182,7 @@ All settings live in `.env`. The essentials:
 | Variable | Default | Purpose |
 |---|---|---|
 | `OPENAI_API_KEY` | — | **Required.** Used for both chat and embeddings. |
-| `OPENAI_CHAT_MODEL` | `gpt-4.1-mini` | Chat completion model. |
+| `OPENAI_CHAT_MODEL` | `gpt-4o-mini` | Chat completion model. |
 | `OPENAI_EMBEDDING_MODEL` | `text-embedding-3-large` | Embedding model for retrieval. |
 | `SITE_ROOT` | `https://copernicusberlin.org` | Root URL to crawl. |
 | `CRAWL_PATHS` | `/en` | Comma-separated path prefixes to crawl. |
