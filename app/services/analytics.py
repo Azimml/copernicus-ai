@@ -2,16 +2,9 @@ from __future__ import annotations
 
 from collections import Counter
 from datetime import datetime, timedelta, timezone
-from threading import RLock
 from typing import Any
 
-import orjson
-
-from app.core.config import ANALYTICS_DIR
-
-
-EVENTS_PATH = ANALYTICS_DIR / "events.jsonl"
-_lock = RLock()
+from app.core.db import connect
 
 
 def _now_iso() -> str:
@@ -29,48 +22,47 @@ def record_chat_event(
     event_type: str = "chat",
     satisfaction: str | None = None,
 ) -> None:
-    payload = {
-        "ts": _now_iso(),
-        "channel": "web",
-        "language": "en",
-        "session_id": session_id or "",
-        "message": (message or "")[:400],
-        "needs_human": bool(needs_human),
-        "confidence": confidence,
-        "latency_ms": latency_ms,
-        "error": error or "",
-        "event_type": (event_type or "chat")[:40],
-        "satisfaction": (satisfaction or "")[:20],
-    }
-    line = orjson.dumps(payload).decode("utf-8")
-    with _lock:
-        ANALYTICS_DIR.mkdir(parents=True, exist_ok=True)
-        with EVENTS_PATH.open("a", encoding="utf-8") as f:
-            f.write(line + "\n")
-
-
-def _iter_events(max_events: int = 20000) -> list[dict[str, Any]]:
-    if not EVENTS_PATH.exists():
-        return []
-    rows: list[dict[str, Any]] = []
-    with _lock:
-        lines = EVENTS_PATH.read_text(encoding="utf-8").splitlines()
-    for ln in lines[-max_events:]:
-        ln = ln.strip()
-        if not ln:
-            continue
-        try:
-            row = orjson.loads(ln.encode("utf-8"))
-        except Exception:
-            continue
-        if isinstance(row, dict):
-            rows.append(row)
-    return rows
+    ts = _now_iso()
+    with connect() as conn:
+        conn.execute(
+            "INSERT INTO analytics_events (ts, channel, language, session_id, message, "
+            "needs_human, confidence, latency_ms, error, event_type, satisfaction) "
+            "VALUES (?, 'web', 'en', ?, ?, ?, ?, ?, ?, ?, ?)",
+            (
+                ts,
+                session_id or "",
+                (message or "")[:400],
+                1 if needs_human else 0,
+                confidence,
+                latency_ms,
+                (error or "")[:500],
+                (event_type or "chat")[:40],
+                (satisfaction or "")[:20],
+            ),
+        )
 
 
 def build_summary(days: int = 0) -> dict[str, Any]:
-    events = _iter_events()
-    if not events:
+    with connect() as conn:
+        if days and days > 0:
+            cutoff = (datetime.now(timezone.utc) - timedelta(days=max(1, days))).isoformat()
+            chat_rows = conn.execute(
+                "SELECT * FROM analytics_events WHERE ts >= ? AND event_type != 'satisfaction'",
+                (cutoff,),
+            ).fetchall()
+            sat_rows = conn.execute(
+                "SELECT * FROM analytics_events WHERE ts >= ? AND event_type = 'satisfaction'",
+                (cutoff,),
+            ).fetchall()
+        else:
+            chat_rows = conn.execute(
+                "SELECT * FROM analytics_events WHERE event_type != 'satisfaction'"
+            ).fetchall()
+            sat_rows = conn.execute(
+                "SELECT * FROM analytics_events WHERE event_type = 'satisfaction'"
+            ).fetchall()
+
+    if not chat_rows and not sat_rows:
         return {
             "window_days": days,
             "total_messages": 0,
@@ -83,39 +75,20 @@ def build_summary(days: int = 0) -> dict[str, Any]:
             "satisfaction_counts": {"yes": 0, "no": 0},
         }
 
-    filtered: list[dict[str, Any]] = []
-    if days and days > 0:
-        cutoff = datetime.now(timezone.utc) - timedelta(days=max(1, days))
-        for ev in events:
-            ts = ev.get("ts")
-            try:
-                dt = datetime.fromisoformat(ts)
-            except Exception:
-                continue
-            if dt >= cutoff:
-                filtered.append(ev)
-    else:
-        filtered = events
-
-    chat_events = [ev for ev in filtered if str(ev.get("event_type") or "chat") != "satisfaction"]
-    satisfaction_events = [ev for ev in filtered if str(ev.get("event_type") or "") == "satisfaction"]
-
-    session_ids = [ev.get("session_id", "") for ev in chat_events if ev.get("session_id")]
+    session_ids = [r["session_id"] for r in chat_rows if r["session_id"]]
     unique_sessions = len(set(session_ids))
-    top_questions = Counter((ev.get("message") or "").strip() for ev in chat_events if ev.get("message"))
+    top_questions = Counter((r["message"] or "").strip() for r in chat_rows if r["message"])
     satisfaction_counts = Counter(
-        ev.get("satisfaction")
-        for ev in satisfaction_events
-        if ev.get("satisfaction") in {"yes", "no"}
+        r["satisfaction"] for r in sat_rows if r["satisfaction"] in {"yes", "no"}
     )
-    lats = [int(ev["latency_ms"]) for ev in chat_events if isinstance(ev.get("latency_ms"), int)]
+    lats = [int(r["latency_ms"]) for r in chat_rows if r["latency_ms"] is not None]
     avg_latency = int(sum(lats) / len(lats)) if lats else 0
-    needs_human_count = sum(1 for ev in chat_events if ev.get("needs_human"))
-    error_count = sum(1 for ev in chat_events if ev.get("error"))
+    needs_human_count = sum(1 for r in chat_rows if r["needs_human"])
+    error_count = sum(1 for r in chat_rows if r["error"])
 
     return {
         "window_days": days,
-        "total_messages": len(chat_events),
+        "total_messages": len(chat_rows),
         "unique_sessions": unique_sessions,
         "needs_human": needs_human_count,
         "error_count": error_count,

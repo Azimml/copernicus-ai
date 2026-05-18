@@ -1,53 +1,92 @@
 from __future__ import annotations
 
+import json
 from datetime import datetime, timezone
-from threading import RLock
 from uuid import uuid4
 
-from app.core.config import RAW_DIR
-from app.core.io import read_json, write_json
+from app.core.db import connect
 from app.services.chat_log import append_log
 from app.services.operator_bridge import enqueue_operator_message
-
-
-HANDOFFS_PATH = RAW_DIR / "handoffs.json"
-_lock = RLock()
 
 
 def _now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
+def _row_to_handoff(conn, row) -> dict:
+    if row is None:
+        return None
+    try:
+        contact = json.loads(row["contact_json"]) if row["contact_json"] else {}
+    except Exception:
+        contact = {}
+    msgs = conn.execute(
+        "SELECT role, operator_name, text, created_at FROM handoff_messages "
+        "WHERE handoff_id = ? ORDER BY id ASC",
+        (row["id"],),
+    ).fetchall()
+    return {
+        "id": row["id"],
+        "status": row["status"],
+        "channel": row["channel"],
+        "session_id": row["session_id"],
+        "language": row["language"],
+        "user_message": row["user_message"],
+        "bot_answer": row["bot_answer"],
+        "confidence": row["confidence"],
+        "reason": row["reason"],
+        "created_at": row["created_at"],
+        "updated_at": row["updated_at"],
+        "resolved_at": row["resolved_at"],
+        "resolution_note": row["resolution_note"],
+        "ai_enabled": bool(row["ai_enabled"]),
+        "contact": contact,
+        "messages": [
+            {
+                "role": m["role"],
+                "operator_name": m["operator_name"],
+                "text": m["text"],
+                "created_at": m["created_at"],
+            }
+            for m in msgs
+        ],
+    }
+
+
 def list_handoffs(status: str | None = None, limit: int = 100) -> list[dict]:
-    payload = read_json(HANDOFFS_PATH, default={"items": []})
-    items = payload.get("items", [])
-    if status in {"open", "resolved"}:
-        items = [x for x in items if x.get("status") == status]
-    return list(reversed(items))[: max(1, min(limit, 500))]
+    cap = max(1, min(limit, 500))
+    with connect() as conn:
+        if status in {"open", "resolved"}:
+            rows = conn.execute(
+                "SELECT * FROM handoffs WHERE status = ? ORDER BY created_at DESC LIMIT ?",
+                (status, cap),
+            ).fetchall()
+        else:
+            rows = conn.execute(
+                "SELECT * FROM handoffs ORDER BY created_at DESC LIMIT ?", (cap,)
+            ).fetchall()
+        return [_row_to_handoff(conn, r) for r in rows]
 
 
 def get_handoff(handoff_id: str) -> dict | None:
-    payload = read_json(HANDOFFS_PATH, default={"items": []})
-    for it in payload.get("items", []):
-        if it.get("id") == handoff_id:
-            return it
-    return None
+    with connect() as conn:
+        row = conn.execute(
+            "SELECT * FROM handoffs WHERE id = ?", (handoff_id,)
+        ).fetchone()
+        return _row_to_handoff(conn, row) if row else None
 
 
 def get_open_handoff(session_id: str) -> dict | None:
     sid = (session_id or "").strip()
     if not sid:
         return None
-    payload = read_json(HANDOFFS_PATH, default={"items": []})
-    items = payload.get("items", [])
-    for idx in range(len(items) - 1, -1, -1):
-        item = items[idx]
-        if item.get("status") != "open":
-            continue
-        if item.get("session_id") != sid:
-            continue
-        return item
-    return None
+    with connect() as conn:
+        row = conn.execute(
+            "SELECT * FROM handoffs WHERE status = 'open' AND session_id = ? "
+            "ORDER BY created_at DESC LIMIT 1",
+            (sid,),
+        ).fetchone()
+        return _row_to_handoff(conn, row) if row else None
 
 
 def create_handoff(
@@ -67,107 +106,89 @@ def create_handoff(
         for k, v in (contact or {}).items()
         if str(v or "").strip()
     }
-    with _lock:
-        payload = read_json(HANDOFFS_PATH, default={"items": []})
-        items = payload.get("items", [])
-        item = {
-            "id": str(uuid4()),
-            "status": "open",
-            "channel": "web",
-            "session_id": sid,
-            "language": "en",
-            "user_message": user_message[:2000],
-            "bot_answer": bot_answer[:2000],
-            "confidence": confidence,
-            "reason": needs_human_reason[:300],
-            "created_at": now,
-            "updated_at": now,
-            "resolved_at": "",
-            "resolution_note": "",
-            "ai_enabled": bool(ai_enabled),
-            "contact": contact_payload,
-            "messages": [
-                {"role": "user", "text": user_message[:2000], "created_at": now},
-                {"role": "assistant", "text": bot_answer[:2000], "created_at": now},
-            ],
-        }
-        items.append(item)
-        write_json(HANDOFFS_PATH, {"items": items})
-    return item
+    hid = str(uuid4())
+    user_message = (user_message or "")[:2000]
+    bot_answer = (bot_answer or "")[:2000]
+    needs_human_reason = (needs_human_reason or "")[:300]
+
+    with connect() as conn:
+        conn.execute("BEGIN")
+        conn.execute(
+            "INSERT INTO handoffs (id, status, channel, session_id, language, user_message, "
+            "bot_answer, confidence, reason, contact_json, ai_enabled, created_at, updated_at) "
+            "VALUES (?, 'open', 'web', ?, 'en', ?, ?, ?, ?, ?, ?, ?, ?)",
+            (
+                hid, sid, user_message, bot_answer, confidence,
+                needs_human_reason, json.dumps(contact_payload),
+                1 if ai_enabled else 0, now, now,
+            ),
+        )
+        conn.execute(
+            "INSERT INTO handoff_messages (handoff_id, role, operator_name, text, created_at) "
+            "VALUES (?, 'user', '', ?, ?)",
+            (hid, user_message, now),
+        )
+        conn.execute(
+            "INSERT INTO handoff_messages (handoff_id, role, operator_name, text, created_at) "
+            "VALUES (?, 'assistant', '', ?, ?)",
+            (hid, bot_answer, now),
+        )
+        conn.execute("COMMIT")
+
+    return get_handoff(hid)
 
 
 def resolve_handoff(handoff_id: str, note: str = "") -> dict | None:
-    with _lock:
-        payload = read_json(HANDOFFS_PATH, default={"items": []})
-        items = payload.get("items", [])
-        for idx, it in enumerate(items):
-            if it.get("id") != handoff_id:
-                continue
-            updated = {
-                **it,
-                "status": "resolved",
-                "resolved_at": _now_iso(),
-                "resolution_note": note[:500],
-                "updated_at": _now_iso(),
-            }
-            items[idx] = updated
-            write_json(HANDOFFS_PATH, {"items": items})
-            return updated
-    return None
+    now = _now_iso()
+    with connect() as conn:
+        cur = conn.execute(
+            "UPDATE handoffs SET status='resolved', resolved_at=?, resolution_note=?, updated_at=? "
+            "WHERE id = ?",
+            (now, (note or "")[:500], now, handoff_id),
+        )
+        if cur.rowcount == 0:
+            return None
+    return get_handoff(handoff_id)
 
 
 def add_operator_reply(handoff_id: str, message: str, operator_name: str = "Operator") -> dict | None:
     text = (message or "").strip()
     if not text:
         return None
-    with _lock:
-        payload = read_json(HANDOFFS_PATH, default={"items": []})
-        items = payload.get("items", [])
-        for idx, it in enumerate(items):
-            if it.get("id") != handoff_id:
-                continue
-            now = _now_iso()
-            msgs = it.get("messages", [])
-            msg = {
-                "role": "operator",
-                "operator_name": operator_name,
-                "text": text[:4000],
-                "created_at": now,
-            }
-            msgs.append(msg)
-            updated = {
-                **it,
-                "messages": msgs[-160:],
-                "updated_at": now,
-                "ai_enabled": False,
-            }
-            items[idx] = updated
-            write_json(HANDOFFS_PATH, {"items": items})
+    now = _now_iso()
+    with connect() as conn:
+        row = conn.execute(
+            "SELECT id, session_id, channel FROM handoffs WHERE id = ?", (handoff_id,)
+        ).fetchone()
+        if not row:
+            return None
+        conn.execute(
+            "INSERT INTO handoff_messages (handoff_id, role, operator_name, text, created_at) "
+            "VALUES (?, 'operator', ?, ?, ?)",
+            (handoff_id, operator_name, text[:4000], now),
+        )
+        conn.execute(
+            "UPDATE handoffs SET updated_at=?, ai_enabled=0 WHERE id=?",
+            (now, handoff_id),
+        )
+        session_id = row["session_id"]
 
-            session_id = updated.get("session_id", "")
-            if session_id:
-                enqueue_operator_message(session_id=session_id, message=text, operator_name=operator_name)
-                append_log(session_id=session_id, role="operator", text=text)
-            return updated
-    return None
+    if session_id:
+        enqueue_operator_message(session_id=session_id, message=text, operator_name=operator_name)
+        append_log(session_id=session_id, role="operator", text=text)
+    return get_handoff(handoff_id)
 
 
 def set_handoff_ai_enabled(handoff_id: str, ai_enabled: bool) -> dict | None:
-    with _lock:
-        payload = read_json(HANDOFFS_PATH, default={"items": []})
-        items = payload.get("items", [])
-        for idx, it in enumerate(items):
-            if it.get("id") != handoff_id:
-                continue
-            updated = {
-                **it,
-                "ai_enabled": bool(ai_enabled),
-                "updated_at": _now_iso(),
-            }
-            items[idx] = updated
-            write_json(HANDOFFS_PATH, {"items": items})
-            return updated
-    return None
+    now = _now_iso()
+    with connect() as conn:
+        cur = conn.execute(
+            "UPDATE handoffs SET ai_enabled=?, updated_at=? WHERE id=?",
+            (1 if ai_enabled else 0, now, handoff_id),
+        )
+        if cur.rowcount == 0:
+            return None
+    return get_handoff(handoff_id)
 
 
 def is_ai_enabled_for_session(session_id: str | None) -> bool:
@@ -186,23 +207,24 @@ def append_user_message_to_open_handoff(
     body = (text or "").strip()
     if not sid or not body:
         return None
-    with _lock:
-        payload = read_json(HANDOFFS_PATH, default={"items": []})
-        items = payload.get("items", [])
-        for idx in range(len(items) - 1, -1, -1):
-            it = items[idx]
-            if it.get("status") != "open" or it.get("session_id") != sid:
-                continue
-            now = _now_iso()
-            msgs = it.get("messages", [])
-            msgs.append({"role": "user", "text": body[:2000], "created_at": now})
-            updated = {
-                **it,
-                "user_message": body[:2000],
-                "updated_at": now,
-                "messages": msgs[-160:],
-            }
-            items[idx] = updated
-            write_json(HANDOFFS_PATH, {"items": items})
-            return updated
-    return None
+    body = body[:2000]
+    now = _now_iso()
+    with connect() as conn:
+        row = conn.execute(
+            "SELECT id FROM handoffs WHERE status='open' AND session_id=? "
+            "ORDER BY created_at DESC LIMIT 1",
+            (sid,),
+        ).fetchone()
+        if not row:
+            return None
+        hid = row["id"]
+        conn.execute(
+            "INSERT INTO handoff_messages (handoff_id, role, operator_name, text, created_at) "
+            "VALUES (?, 'user', '', ?, ?)",
+            (hid, body, now),
+        )
+        conn.execute(
+            "UPDATE handoffs SET user_message=?, updated_at=? WHERE id=?",
+            (body, now, hid),
+        )
+    return get_handoff(hid)

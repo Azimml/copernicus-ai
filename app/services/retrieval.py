@@ -21,8 +21,12 @@ class Retriever:
         self._doc_lens: np.ndarray | None = None
         self._avg_doc_len: float = 1.0
         self._idf: dict[str, float] = {}
+        # Embedding LRU cache (per-worker, in-memory).
+        # 2048 entries × ~12KB each ≈ 24MB — fits comfortably even on small VPS.
         self._embedding_cache: dict[str, list[float]] = {}
-        self._cache_max: int = 128
+        self._cache_max: int = 2048
+        self._embedding_hits: int = 0
+        self._embedding_misses: int = 0
         self._lock = RLock()
 
     def reload(self) -> None:
@@ -38,8 +42,13 @@ class Retriever:
         if not self._client:
             self._client = OpenAI(api_key=settings.openai_api_key)
         cache_key = text.strip().lower()
+        # Pop+reinsert turns the dict into an LRU — most recently used keys
+        # stay; oldest get evicted when we exceed _cache_max.
         if cache_key in self._embedding_cache:
-            return self._embedding_cache[cache_key]
+            value = self._embedding_cache.pop(cache_key)
+            self._embedding_cache[cache_key] = value
+            self._embedding_hits += 1
+            return value
         emb = self._client.embeddings.create(
             model=settings.openai_embedding_model, input=[text],
         ).data[0].embedding
@@ -47,7 +56,17 @@ class Retriever:
             oldest_key = next(iter(self._embedding_cache))
             del self._embedding_cache[oldest_key]
         self._embedding_cache[cache_key] = emb
+        self._embedding_misses += 1
         return emb
+
+    def cache_stats(self) -> dict:
+        with self._lock:
+            return {
+                "embedding_cache_size": len(self._embedding_cache),
+                "embedding_cache_max": self._cache_max,
+                "embedding_hits": self._embedding_hits,
+                "embedding_misses": self._embedding_misses,
+            }
 
     def _ensure_loaded(self) -> None:
         with self._lock:

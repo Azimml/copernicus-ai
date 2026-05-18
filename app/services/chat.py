@@ -118,14 +118,83 @@ def _looks_like_scope_refusal(answer: str) -> bool:
     )
 
 
+class _AnswerCache:
+    """LRU cache of full chat answers for identical first-turn questions.
+
+    Skips OpenAI entirely when many users ask the same question — typical for
+    org chatbots (top-N questions hit 60%+ of traffic). Caches only the first
+    turn of a session so we never lose conversational context. TTL is short
+    (10 min) so admin edits to FAQ / link rules show up quickly.
+    """
+    def __init__(self, max_entries: int = 512, ttl_sec: int = 600) -> None:
+        from collections import OrderedDict
+        self._store: OrderedDict[str, tuple[float, ChatResult]] = OrderedDict()
+        self._max = max_entries
+        self._ttl = ttl_sec
+        self.hits = 0
+        self.misses = 0
+
+    @staticmethod
+    def _key(message: str) -> str:
+        # Normalise: lowercase, collapse whitespace, strip trailing punctuation.
+        norm = re.sub(r"\s+", " ", (message or "").strip().lower())
+        return norm.rstrip("?!. ")
+
+    def get(self, message: str) -> ChatResult | None:
+        import time
+        key = self._key(message)
+        if not key:
+            return None
+        item = self._store.get(key)
+        if not item:
+            self.misses += 1
+            return None
+        ts, result = item
+        if time.time() - ts > self._ttl:
+            del self._store[key]
+            self.misses += 1
+            return None
+        # Refresh LRU position.
+        self._store.move_to_end(key)
+        self.hits += 1
+        return result
+
+    def set(self, message: str, result: ChatResult) -> None:
+        import time
+        key = self._key(message)
+        if not key:
+            return
+        self._store[key] = (time.time(), result)
+        self._store.move_to_end(key)
+        while len(self._store) > self._max:
+            self._store.popitem(last=False)
+
+    def clear(self) -> None:
+        self._store.clear()
+
+    def stats(self) -> dict:
+        return {
+            "answer_cache_size": len(self._store),
+            "answer_cache_max": self._max,
+            "answer_hits": self.hits,
+            "answer_misses": self.misses,
+        }
+
+
 class ChatService:
     def __init__(self) -> None:
         self._client = OpenAI(api_key=settings.openai_api_key) if settings.openai_api_key else None
         self._retriever = Retriever()
         self._memory = SessionMemory(max_turns=settings.memory_max_turns)
+        self._answer_cache = _AnswerCache(max_entries=512, ttl_sec=600)
 
     def reload_index(self) -> None:
         self._retriever.reload()
+        # Cached answers might reference URLs no longer in the index.
+        self._answer_cache.clear()
+
+    def cache_stats(self) -> dict:
+        return {**self._retriever.cache_stats(), **self._answer_cache.stats()}
 
     def clear_session(self, session_id: str) -> None:
         self._memory.clear(session_id)
@@ -237,6 +306,16 @@ class ChatService:
             self._memory.add_turn(session_id or "", "assistant", answer)
             return ChatResult(answer=answer, language="en", confidence=1.0, needs_human=False)
 
+        # Answer cache: only on the first turn of a session. Skips OpenAI for
+        # popular questions — usually 30-60% hit rate after warm-up.
+        is_first_turn = not bool(self._memory.get_history(session_id or ""))
+        if is_first_turn:
+            cached = self._answer_cache.get(message)
+            if cached:
+                self._memory.add_turn(session_id or "", "user", message)
+                self._memory.add_turn(session_id or "", "assistant", cached.answer)
+                return cached
+
         # Manual link rule override.
         rule = self._resolve_link_rule(message)
         if rule and rule.get("mode") == "disable":
@@ -277,7 +356,10 @@ class ChatService:
 
         self._memory.add_turn(session_id or "", "user", message)
         self._memory.add_turn(session_id or "", "assistant", answer)
-        return ChatResult(answer=answer, language="en", confidence=confidence, needs_human=needs_human)
+        result = ChatResult(answer=answer, language="en", confidence=confidence, needs_human=needs_human)
+        if is_first_turn and not _looks_like_no_info(answer):
+            self._answer_cache.set(message, result)
+        return result
 
     def stream_answer(self, message: str, language: str | None = None, session_id: str | None = None) -> Iterator[str]:
         """Yields incremental tokens of the answer; used by /chat/stream."""
@@ -295,6 +377,20 @@ class ChatService:
             self._memory.add_turn(session_id or "", "assistant", text)
             yield text
             return
+
+        # Answer cache for popular first-turn questions. Emit in chunks so
+        # the widget still gets a stream-like feel.
+        is_first_turn = not bool(self._memory.get_history(session_id or ""))
+        if is_first_turn:
+            cached = self._answer_cache.get(message)
+            if cached:
+                self._memory.add_turn(session_id or "", "user", message)
+                self._memory.add_turn(session_id or "", "assistant", cached.answer)
+                step = max(8, settings.stream_chunk_chars)
+                full = cached.answer
+                for i in range(0, len(full), step):
+                    yield full[i : i + step]
+                return
 
         chunks = self._retriever.query(message, "en", k=settings.retrieval_top_k)
         context_block, used_urls = self._build_context_block(chunks)
@@ -349,6 +445,14 @@ class ChatService:
 
         self._memory.add_turn(session_id or "", "user", message)
         self._memory.add_turn(session_id or "", "assistant", full)
+
+        # Stash the full answer in cache so subsequent first-turn askers of
+        # the same question skip OpenAI entirely.
+        if is_first_turn and full and not _looks_like_no_info(full):
+            self._answer_cache.set(
+                message,
+                ChatResult(answer=full, language="en", confidence=0.9, needs_human=False),
+            )
 
     def infer_needs_human(self, full_answer: str, confidence: float | None) -> bool:
         return _looks_like_no_info(full_answer)

@@ -2239,22 +2239,6 @@
       "url": "https://copernicusberlin.org/en/Use.ngo",
       "title": "Page Not Found",
       "text": "404 - Page Not Found\nThe resource you requested could not be found.\nGo back to Home"
-    },
-    {
-      "chunk_id": "faq_54803d25-1fa5-4974-9517-c39e8baada62",
-      "doc_id": "faq_54803d25-1fa5-4974-9517-c39e8baada62",
-      "language": "en",
-      "url": "faq://manual",
-      "title": "FAQ",
-      "text": "Q: When is the next IES application deadline?\nA: The next IES application deadline is October 10, 2024. The application period runs from September 1, 2024 to October 10, 2024."
-    },
-    {
-      "chunk_id": "faq_2a9412b5-7d59-4120-9b18-7ba6ee125d8a",
-      "doc_id": "faq_2a9412b5-7d59-4120-9b18-7ba6ee125d8a",
-      "language": "en",
-      "url": "faq://manual",
-      "title": "FAQ",
-      "text": "Q: How do I cancel my volunteer application?\nA: Email volunteer@copernicusberlin.org with your application ID. We will cancel it within 2 business days and confirm by email."
     }
   ]
 }

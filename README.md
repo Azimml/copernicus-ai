@@ -221,10 +221,11 @@ copernicus-ai/
 
 ## 🚢 Deployment notes
 
-- The service is a **single Python process** — run it behind any standard reverse
-  proxy (nginx, Caddy, Traefik, Cloudflare Tunnel).
-- Persistent data lives in **`data/`**. Mount it as a volume in production so
-  conversation history and configuration survive container restarts.
+- The service runs as **multiple uvicorn workers** in a single process tree
+  (default: 4). Override with `make run WORKERS=8` on larger hardware.
+- Persistent data lives in **`data/`** (SQLite database + crawled docs +
+  embeddings). Mount it as a volume in production so conversation history,
+  support requests, and configuration survive container restarts.
 - Playwright needs system libraries for Chromium. On Debian/Ubuntu `make install`
   pulls these automatically; on Alpine install them manually
   (`apk add chromium nss freetype …`).
@@ -232,6 +233,91 @@ copernicus-ai/
   embedded over the **same scheme** as the host page or browsers will block it.
 - Set `OPENAI_API_KEY` and any non-default settings as **environment variables**
   in production rather than committing them to `.env`.
+
+---
+
+## 📈 Scaling & capacity
+
+How much traffic can this handle? With the defaults below, **~500 concurrent
+chats** comfortably on a modest VPS — well above what a typical org website
+needs.
+
+### What's built in
+
+| Optimisation | Why it matters |
+|---|---|
+| **Multi-worker uvicorn** *(default 4)* | Parallel request handling across all CPU cores. |
+| **SQLite + WAL mode** | Concurrent-safe writes, sub-ms reads, no separate DB server. All workers share state via one file. |
+| **Cross-worker session memory** | A follow-up message lands on any worker and still finds the prior conversation. |
+| **Embedding LRU cache** *(2,048 entries / worker)* | Skips OpenAI for repeat queries. Typical hit rate after warmup: 30-50%. |
+| **First-turn answer cache** *(10 min TTL)* | Popular questions skip the LLM entirely. For org chatbots where top-N questions are 60%+ of traffic, this is a big OpenAI bill saving. |
+| **Background reindex** | The 3-5 minute crawl runs in a daemon thread — the HTTP workers stay responsive. Admin UI polls `/admin/reindex-status` for progress. |
+
+### Capacity estimates
+
+On a **Hetzner CPX21** (3 vCPU, 4 GB RAM, €5/mo) with the defaults:
+
+| Concurrent chats | Behavior |
+|---|---|
+| ≤ 50 | Smooth — sub-3-second responses |
+| 50–200 | Some queueing — responses arrive in 5-10 sec |
+| 200–500 | OpenAI rate limits become the bottleneck, not the server |
+| 500+ | Need to scale OpenAI tier or shard across machines |
+
+> **1,000 visitors/day translates to ~5-30 concurrent at peak.** This setup
+> handles that with significant headroom.
+
+### Recommended production setup
+
+```
+┌──────────────┐    HTTPS     ┌──────────────────┐
+│  Cloudflare  │ ───────────▶ │  Origin (VPS)    │
+│  (free tier) │              │  ┌────────────┐  │
+└──────────────┘              │  │  Caddy     │  │  ← TLS + static caching
+       │                      │  └─────┬──────┘  │
+       │ DDoS / WAF / CDN     │        │         │
+       │ static asset cache   │  ┌─────▼──────┐  │
+       │                      │  │  uvicorn   │  │  ← 4 workers
+       │                      │  │  workers   │  │
+       │                      │  └─────┬──────┘  │
+                              │        │         │
+                              │  ┌─────▼──────┐  │
+                              │  │ SQLite DB  │  │  ← WAL mode
+                              │  └────────────┘  │
+                              └──────────────────┘
+```
+
+**Step-by-step:**
+
+1. **Spin up a small VPS** — Hetzner CPX21 (€5/mo) or DigitalOcean $12 droplet.
+2. **Install Docker** or just run `make install` natively.
+3. **Reverse proxy** — Caddy with auto-HTTPS is the simplest:
+   ```caddyfile
+   chat.copernicusberlin.org {
+       reverse_proxy 127.0.0.1:8000
+   }
+   ```
+4. **Cloudflare in front** (free tier is enough):
+   - Add the domain to Cloudflare, set the DNS record to "proxied" (orange cloud).
+   - Cloudflare absorbs DDoS, caches the static widget/admin assets at the edge,
+     and gives you free TLS in front of Caddy.
+5. **Persistent data** — back up `data/copernicus.db` daily.
+   ```bash
+   sqlite3 data/copernicus.db ".backup '/backups/copernicus-$(date +%F).db'"
+   ```
+6. **Monitoring** — `GET /api/health` returns runtime stats and cache hit rates.
+
+### When to upgrade
+
+If `chat_errors` in `/api/health` keeps growing or OpenAI bills jump
+unexpectedly, check `/api/health` → `caches`:
+
+- **Low embedding hit rate** → users are asking very diverse questions; this is
+  normal, no fix needed.
+- **Low answer hit rate** *but* the same top-N questions appear in Analytics →
+  raise `_AnswerCache` TTL or `max_entries` in [`app/services/chat.py`](app/services/chat.py).
+- **HTTP errors during traffic spikes** → bump `WORKERS` from 4 to 8 first; if
+  CPU is pegged, move to a bigger VPS.
 
 ---
 

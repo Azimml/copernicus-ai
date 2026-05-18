@@ -93,7 +93,7 @@
     else if (name === "faq") loadFaqs();
     else if (name === "link-rules") loadLinkRules();
     else if (name === "analytics") loadAnalytics();
-    else if (name === "reindex") loadIndexStatus();
+    else if (name === "reindex") { loadIndexStatus(); pollReindex(); }
   }
 
   /* HANDOFFS */
@@ -608,6 +608,8 @@
       });
   }
 
+  var _reindexPoll = null;
+
   function runReindex() {
     var mode = (document.querySelector('input[name="reindex-mode"]:checked') || {}).value || "full";
     var full = mode === "full";
@@ -615,30 +617,60 @@
     var status = $("#reindex-status");
     var output = $("#reindex-output");
     btn.disabled = true;
-    btn.textContent = "Running…";
+    btn.textContent = "Starting…";
     status.style.display = "";
     status.textContent = full
-      ? "Crawling copernicusberlin.org and rebuilding embeddings… this takes 3–5 minutes. You can leave this page open."
-      : "Re-embedding existing pages… ~30 seconds.";
+      ? "Crawling copernicusberlin.org and rebuilding embeddings… you can leave this page open or navigate away."
+      : "Re-embedding existing pages…";
     output.style.display = "none";
     output.textContent = "";
     api("/api/admin/reindex", {
       method: "POST",
       body: JSON.stringify({ full_crawl: full }),
     })
-      .then(function (data) {
-        output.style.display = "";
-        output.textContent = "✓ Indexed " + data.indexed_documents + " documents into " + data.indexed_chunks + " chunks.";
-        status.textContent = "Reindex complete.";
-        btn.disabled = false; btn.textContent = "Start reindex";
-        loadIndexStatus();
+      .then(function () {
+        btn.textContent = "Running…";
+        if (_reindexPoll) clearInterval(_reindexPoll);
+        _reindexPoll = setInterval(pollReindex, 2500);
+        pollReindex();
       })
       .catch(function (e) {
         output.style.display = "";
         output.textContent = "✗ Failed: " + e.message;
-        status.textContent = "Reindex failed.";
+        status.textContent = "Reindex could not start.";
         btn.disabled = false; btn.textContent = "Start reindex";
       });
+  }
+
+  function pollReindex() {
+    api("/api/admin/reindex-status")
+      .then(function (data) {
+        var active = data.active;
+        var latest = data.latest;
+        var btn = $("#run-reindex");
+        var status = $("#reindex-status");
+        var output = $("#reindex-output");
+        if (active) {
+          status.style.display = "";
+          status.textContent = "Reindex " + active.status + " · started " + _fmtDate(active.started_at);
+          return;
+        }
+        // Job finished — stop polling, reset button, show outcome.
+        if (_reindexPoll) { clearInterval(_reindexPoll); _reindexPoll = null; }
+        btn.disabled = false; btn.textContent = "Start reindex";
+        if (latest) {
+          output.style.display = "";
+          if (latest.status === "success") {
+            output.textContent = "✓ Indexed " + latest.docs + " documents into " + latest.chunks + " chunks.";
+            status.textContent = "Reindex complete.";
+            loadIndexStatus();
+          } else if (latest.status === "failed") {
+            output.textContent = "✗ Failed: " + (latest.error || "unknown error");
+            status.textContent = "Reindex failed.";
+          }
+        }
+      })
+      .catch(function () { /* transient — keep polling */ });
   }
 
   function renderError(sel, e) {

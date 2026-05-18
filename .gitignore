@@ -9,6 +9,11 @@ __pycache__/
 .env.local
 .env.*.local
 
+# SQLite write-ahead log + shared-memory journals (transient)
+*.db-wal
+*.db-shm
+*.db-journal
+
 # OS / editor
 .DS_Store
 Thumbs.db

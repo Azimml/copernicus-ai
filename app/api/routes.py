@@ -22,7 +22,6 @@ from app.models.schemas import (
     QuickActionItem,
     QuickActionsUpdateRequest,
     ReindexRequest,
-    ReindexResponse,
     SatisfactionFeedbackRequest,
     SessionHistoryItem,
     SessionResetRequest,
@@ -43,7 +42,7 @@ from app.services.handoff import (
     resolve_handoff,
     set_handoff_ai_enabled,
 )
-from app.services.indexer import build_index, delete_faq_index, upsert_faq_index
+from app.services.indexer import delete_faq_index, upsert_faq_index
 from app.services.link_rules import delete_link_rule, list_link_rules, upsert_link_rule
 from app.services.monitoring import runtime_monitor
 from app.services.operator_bridge import list_operator_messages
@@ -61,7 +60,12 @@ chat_service = ChatService()
 
 @router.get("/health")
 def health() -> dict:
-    return {"ok": True, "env": settings.app_env, "runtime": runtime_monitor.snapshot()}
+    return {
+        "ok": True,
+        "env": settings.app_env,
+        "runtime": runtime_monitor.snapshot(),
+        "caches": chat_service.cache_stats(),
+    }
 
 
 @router.get("/health/ready")
@@ -423,16 +427,36 @@ def remove_link_rule(rule_id: str, x_admin_token: str | None = Header(default=No
     return {"ok": True}
 
 
-@router.post("/admin/reindex", response_model=ReindexResponse)
+@router.post("/admin/reindex")
 def reindex(
     payload: ReindexRequest,
     x_admin_token: str | None = Header(default=None, alias="X-Admin-Token"),
-) -> ReindexResponse:
+) -> dict:
+    """Kick off a reindex in the background. Returns immediately with the
+    job row; poll ``/api/admin/reindex-status`` for progress."""
+    from app.services.reindex_jobs import start_job
     _verify_admin_token(x_admin_token)
-    docs, chunks = build_index(full_crawl=payload.full_crawl)
-    chat_service.reload_index()
-    runtime_monitor.mark_reindex()
-    return ReindexResponse(indexed_documents=docs, indexed_chunks=chunks)
+    try:
+        job = start_job(
+            full_crawl=payload.full_crawl,
+            on_done=lambda d, c: chat_service.reload_index(),
+        )
+    except RuntimeError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
+    return {"ok": True, "job": job}
+
+
+@router.get("/admin/reindex-status")
+def reindex_status(
+    x_admin_token: str | None = Header(default=None, alias="X-Admin-Token"),
+) -> dict:
+    """Current reindex job state. The admin UI polls this every 2-3 sec
+    while a job is running."""
+    from app.services.reindex_jobs import get_latest_job, get_active_job
+    _verify_admin_token(x_admin_token)
+    latest = get_latest_job()
+    active = get_active_job()
+    return {"active": active, "latest": latest}
 
 
 @router.get("/admin/index-status")

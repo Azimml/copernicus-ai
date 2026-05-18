@@ -1,15 +1,9 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
-from threading import RLock
 from uuid import uuid4
 
-from app.core.config import RAW_DIR
-from app.core.io import read_json, write_json
-
-
-OUTBOX_PATH = RAW_DIR / "operator_outbox.json"
-_lock = RLock()
+from app.core.db import connect
 
 
 def _now_iso() -> str:
@@ -19,38 +13,63 @@ def _now_iso() -> str:
 def enqueue_operator_message(session_id: str, message: str, operator_name: str = "Operator") -> dict:
     if not session_id:
         return {}
-    with _lock:
-        payload = read_json(OUTBOX_PATH, default={"items": {}})
-        items = payload.get("items", {})
-        queue = items.get(session_id, [])
-        msg = {
-            "id": str(uuid4()),
-            "role": "operator",
-            "operator_name": operator_name,
-            "text": message[:4000],
-            "created_at": _now_iso(),
-        }
-        queue.append(msg)
-        items[session_id] = queue
-        write_json(OUTBOX_PATH, {"items": items})
-    return msg
+    msg_id = str(uuid4())
+    ts = _now_iso()
+    text = (message or "")[:4000]
+    with connect() as conn:
+        conn.execute(
+            "INSERT INTO operator_outbox (id, session_id, role, operator_name, text, created_at) "
+            "VALUES (?, ?, 'operator', ?, ?, ?)",
+            (msg_id, session_id, operator_name, text, ts),
+        )
+    return {
+        "id": msg_id,
+        "role": "operator",
+        "operator_name": operator_name,
+        "text": text,
+        "created_at": ts,
+    }
 
 
 def list_operator_messages(session_id: str, after_id: str | None = None, limit: int = 100) -> list[dict]:
     if not session_id:
         return []
-    with _lock:
-        payload = read_json(OUTBOX_PATH, default={"items": {}})
-        items = payload.get("items", {})
-        queue = items.get(session_id, [])
-    if not isinstance(queue, list):
-        return []
-    if after_id:
-        idx = -1
-        for i, m in enumerate(queue):
-            if m.get("id") == after_id:
-                idx = i
-                break
-        if idx >= 0:
-            queue = queue[idx + 1 :]
-    return queue[: max(1, min(limit, 200))]
+    cap = max(1, min(limit, 200))
+
+    with connect() as conn:
+        if after_id:
+            row = conn.execute(
+                "SELECT created_at FROM operator_outbox WHERE id = ? AND session_id = ?",
+                (after_id, session_id),
+            ).fetchone()
+            if row:
+                cursor_ts = row["created_at"]
+                rows = conn.execute(
+                    "SELECT id, role, operator_name, text, created_at FROM operator_outbox "
+                    "WHERE session_id = ? AND created_at > ? "
+                    "ORDER BY created_at ASC LIMIT ?",
+                    (session_id, cursor_ts, cap),
+                ).fetchall()
+            else:
+                rows = conn.execute(
+                    "SELECT id, role, operator_name, text, created_at FROM operator_outbox "
+                    "WHERE session_id = ? ORDER BY created_at ASC LIMIT ?",
+                    (session_id, cap),
+                ).fetchall()
+        else:
+            rows = conn.execute(
+                "SELECT id, role, operator_name, text, created_at FROM operator_outbox "
+                "WHERE session_id = ? ORDER BY created_at ASC LIMIT ?",
+                (session_id, cap),
+            ).fetchall()
+
+    return [
+        {
+            "id": r["id"],
+            "role": r["role"],
+            "operator_name": r["operator_name"],
+            "text": r["text"],
+            "created_at": r["created_at"],
+        }
+        for r in rows
+    ]

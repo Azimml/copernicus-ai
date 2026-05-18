@@ -15,6 +15,9 @@ logger = logging.getLogger(__name__)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    from app.core.db import init as db_init
+    logger.info("Initializing database…")
+    db_init()
     logger.info("Pre-loading retrieval index...")
     try:
         chat_service.reload_index()
