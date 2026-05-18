@@ -1,0 +1,170 @@
+{
+  "items": [
+    {
+      "id": "1844e3ca-2bd5-4b30-b593-c80da40a83e2",
+      "status": "resolved",
+      "channel": "web",
+      "session_id": "7a8e90d2-ead8-4776-8347-0ac8982b3a0a",
+      "language": "en",
+      "user_message": "How to come to berlin bro?",
+      "bot_answer": "Thanks! Your request has been sent to our team — someone will reply to your email shortly.",
+      "confidence": 0.0,
+      "reason": "support_contact_form",
+      "created_at": "2026-05-17T17:53:08.932840+00:00",
+      "updated_at": "2026-05-17T18:09:41.641774+00:00",
+      "resolved_at": "2026-05-17T18:09:41.641726+00:00",
+      "resolution_note": "",
+      "ai_enabled": false,
+      "contact": {
+        "name": "Azimbek",
+        "email": "azimbekolimbekov1@gmail.com"
+      },
+      "messages": [
+        {
+          "role": "user",
+          "text": "How to come to berlin bro?",
+          "created_at": "2026-05-17T17:53:08.932840+00:00"
+        },
+        {
+          "role": "assistant",
+          "text": "Thanks! Your request has been sent to our team — someone will reply to your email shortly.",
+          "created_at": "2026-05-17T17:53:08.932840+00:00"
+        },
+        {
+          "role": "operator",
+          "operator_name": "Copernicus Team",
+          "text": "yaaa",
+          "created_at": "2026-05-17T18:09:20.244200+00:00"
+        }
+      ]
+    },
+    {
+      "id": "1dbe2aaf-9a16-4ec2-846c-3e4f6d994f5d",
+      "status": "open",
+      "channel": "web",
+      "session_id": "da7e5c13-31d3-4ad9-ba63-bf8670f1f1ed",
+      "language": "en",
+      "user_message": "Can someone advise me on the IES application?",
+      "bot_answer": "Thanks! Your request has been sent to our team — someone will reply to your email shortly.",
+      "confidence": 0.0,
+      "reason": "support_contact_form",
+      "created_at": "2026-05-17T18:05:59.049762+00:00",
+      "updated_at": "2026-05-17T18:05:59.049762+00:00",
+      "resolved_at": "",
+      "resolution_note": "",
+      "ai_enabled": true,
+      "contact": {
+        "name": "Azim",
+        "email": "azim@example.com"
+      },
+      "messages": [
+        {
+          "role": "user",
+          "text": "Can someone advise me on the IES application?",
+          "created_at": "2026-05-17T18:05:59.049762+00:00"
+        },
+        {
+          "role": "assistant",
+          "text": "Thanks! Your request has been sent to our team — someone will reply to your email shortly.",
+          "created_at": "2026-05-17T18:05:59.049762+00:00"
+        }
+      ]
+    },
+    {
+      "id": "81ffbc87-e188-4748-aa4a-88ccf9f0878b",
+      "status": "open",
+      "channel": "web",
+      "session_id": "7a8e90d2-ead8-4776-8347-0ac8982b3a0a",
+      "language": "en",
+      "user_message": "Hello guys how are youuu",
+      "bot_answer": "Thanks! Your request has been sent to our team — someone will reply to your email shortly.",
+      "confidence": 0.0,
+      "reason": "support_contact_form",
+      "created_at": "2026-05-17T18:08:21.351775+00:00",
+      "updated_at": "2026-05-18T07:52:43.182675+00:00",
+      "resolved_at": "",
+      "resolution_note": "",
+      "ai_enabled": true,
+      "contact": {
+        "name": "Azimbek",
+        "email": "azimbekolimbekov1@gmail.com"
+      },
+      "messages": [
+        {
+          "role": "user",
+          "text": "Hello guys how are youuu",
+          "created_at": "2026-05-17T18:08:21.351775+00:00"
+        },
+        {
+          "role": "assistant",
+          "text": "Thanks! Your request has been sent to our team — someone will reply to your email shortly.",
+          "created_at": "2026-05-17T18:08:21.351775+00:00"
+        }
+      ]
+    },
+    {
+      "id": "4389446f-530a-4d5a-b7f6-0344b743e9c7",
+      "status": "open",
+      "channel": "web",
+      "session_id": "sess-emma-1",
+      "language": "en",
+      "user_message": "Can someone advise me on the IES application?",
+      "bot_answer": "Thanks! Your request has been sent to our team — someone will reply to your email shortly.",
+      "confidence": 0.0,
+      "reason": "support_contact_form",
+      "created_at": "2026-05-18T08:06:07.377061+00:00",
+      "updated_at": "2026-05-18T08:06:07.377061+00:00",
+      "resolved_at": "",
+      "resolution_note": "",
+      "ai_enabled": true,
+      "contact": {
+        "name": "Emma Schmidt",
+        "email": "emma.schmidt@example.com"
+      },
+      "messages": [
+        {
+          "role": "user",
+          "text": "Can someone advise me on the IES application?",
+          "created_at": "2026-05-18T08:06:07.377061+00:00"
+        },
+        {
+          "role": "assistant",
+          "text": "Thanks! Your request has been sent to our team — someone will reply to your email shortly.",
+          "created_at": "2026-05-18T08:06:07.377061+00:00"
+        }
+      ]
+    },
+    {
+      "id": "8eb9e351-b186-4a28-9fc6-9d4d001dc476",
+      "status": "open",
+      "channel": "web",
+      "session_id": "sess-luis-2",
+      "language": "en",
+      "user_message": "Hi, I'd like to partner with Copernicus on a youth project — who should I contact?",
+      "bot_answer": "Thanks! Your request has been sent to our team — someone will reply to your email shortly.",
+      "confidence": 0.0,
+      "reason": "support_contact_form",
+      "created_at": "2026-05-18T08:06:07.683908+00:00",
+      "updated_at": "2026-05-18T08:06:07.683908+00:00",
+      "resolved_at": "",
+      "resolution_note": "",
+      "ai_enabled": true,
+      "contact": {
+        "name": "Luis Rodriguez",
+        "email": "luis@example.com"
+      },
+      "messages": [
+        {
+          "role": "user",
+          "text": "Hi, I'd like to partner with Copernicus on a youth project — who should I contact?",
+          "created_at": "2026-05-18T08:06:07.683908+00:00"
+        },
+        {
+          "role": "assistant",
+          "text": "Thanks! Your request has been sent to our team — someone will reply to your email shortly.",
+          "created_at": "2026-05-18T08:06:07.683908+00:00"
+        }
+      ]
+    }
+  ]
+}

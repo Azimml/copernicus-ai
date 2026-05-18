@@ -1,0 +1,908 @@
+{
+  "items": [
+    {
+      "id": "6b98e181-e543-4f69-8573-db263a2be5ae",
+      "ts": "2026-05-17T16:37:16.170941+00:00",
+      "session_id": "smoke-test-1",
+      "channel": "web",
+      "role": "user",
+      "text": "What does Copernicus Berlin do? Give me a short overview."
+    },
+    {
+      "id": "5a46eed2-13f0-4967-a38e-a142320d56c9",
+      "ts": "2026-05-17T16:37:19.545953+00:00",
+      "session_id": "smoke-test-1",
+      "channel": "web",
+      "role": "assistant",
+      "text": "Copernicus Berlin is an NGO focused on education, mobility, cooperation, and community participation. They run local and international projects, including Erasmus+ programs, youth worker mobility, partnerships, capacity building, hackathons, and civic initiatives. They also support scholarships, volunteering, and career development, fostering skills and networks for young people. Their work combines education with practical engagement in Berlin and beyond.\n\nLearn more:\n- https://copernicusberlin.org/en/projects\n- https://copernicusberlin.org/en/ies\n- https://copernicusberlin.org/en/documents"
+    },
+    {
+      "id": "df4c2c89-6986-453a-9a5a-94bd799fb8f2",
+      "ts": "2026-05-17T16:37:30.390677+00:00",
+      "session_id": "smoke-test-2",
+      "channel": "web",
+      "role": "user",
+      "text": "How can I apply for a scholarship at Copernicus Berlin?"
+    },
+    {
+      "id": "567cbc12-cc00-4eed-af5e-fb13ab45d07f",
+      "ts": "2026-05-17T16:37:34.877693+00:00",
+      "session_id": "smoke-test-2",
+      "channel": "web",
+      "role": "assistant",
+      "text": "To apply for a scholarship at Copernicus Berlin, you can follow these steps:\n\n- Complete the online application form available on their website.\n- Provide the required documents as specified in the application.\n- Your application will be reviewed based on motivation, profile, and program fit.\n- Shortlisted candidates may be invited for further selection steps.\n- Selected participants receive onboarding information to start their scholarship experience in Berlin.\n\nYou can choose to apply for full, partial scholarships, or participate at your own cost on the application form. For specific programs like the Ukrainian Talent Scholarship, the process is similar.\n\nIf you want to start your application, visit the scholarship section on copernicusberlin.org/en/scholarship or the specific scholarship page you are interested in.\n\nLearn more:\n- https://copernicusberlin.org/en/ongoing\n- https://copernicusberlin.org/en/scholarship\n- https://copernicusberlin.org/en/summer"
+    },
+    {
+      "id": "b3d71319-b272-4ab6-8363-ea34a5771b00",
+      "ts": "2026-05-17T16:37:34.896876+00:00",
+      "session_id": "smoke-test-3",
+      "channel": "web",
+      "role": "user",
+      "text": "How do I cook pasta?"
+    },
+    {
+      "id": "d8b42b93-3329-4961-a68d-b6d61cb8b2bb",
+      "ts": "2026-05-17T16:37:39.060393+00:00",
+      "session_id": "smoke-test-3",
+      "channel": "web",
+      "role": "assistant",
+      "text": "I can only help with questions about Copernicus Berlin and its programs. If you have any questions about our educational exchanges, scholarships, events, or anything related to Copernicus Berlin, feel free to ask!\n\nLearn more:\n- https://copernicusberlin.org/en/ies\n- https://copernicusberlin.org/en/hack\n- https://copernicusberlin.org/en/ukrainian-talent"
+    },
+    {
+      "id": "bcd0e064-7d0b-4b08-b5ab-2ae6b4e6d24d",
+      "ts": "2026-05-17T16:37:39.078625+00:00",
+      "session_id": "smoke-test-4",
+      "channel": "web",
+      "role": "user",
+      "text": "How can I contact you?"
+    },
+    {
+      "id": "d9ba2972-28c8-4edb-a987-416bdd16ac0b",
+      "ts": "2026-05-17T16:37:42.233395+00:00",
+      "session_id": "smoke-test-4",
+      "channel": "web",
+      "role": "assistant",
+      "text": "You can contact Copernicus Berlin in several ways:\n\n- Phone: +49 (0) 30 9829 9170 or +49 (0) 176 6242 8816\n- Email: info@copernicusberlin.de for general questions\n- Visit or write to: Sophien str. 28/29, 10178 Berlin, Germany\n- Opening hours: Monday to Friday, 09:00 - 17:00\n\nFeel free to reach out via phone, email, or the contact form on their website!\n\nLearn more:\n- https://copernicusberlin.org/en/contact\n- https://copernicusberlin.org/en/donation\n- https://copernicusberlin.org/en/ies"
+    },
+    {
+      "id": "49da986f-1eee-4281-891f-3e829aa06d1a",
+      "ts": "2026-05-17T16:41:35.980790+00:00",
+      "session_id": "e0e6bf95-9d06-45c9-b46c-48f0601a3e9c",
+      "channel": "web",
+      "role": "user",
+      "text": "What does Copernicus Berlin do?"
+    },
+    {
+      "id": "b433ed29-64c2-47d2-a216-4cb09b9ac2e1",
+      "ts": "2026-05-17T16:41:38.698737+00:00",
+      "session_id": "e0e6bf95-9d06-45c9-b46c-48f0601a3e9c",
+      "channel": "web",
+      "role": "assistant",
+      "text": "Copernicus Berlin is a nonprofit organization based in Berlin that focuses on education and international exchange. They:\n\n- Create scholarships and European/international projects\n- Offer training courses, internships, and exchange opportunities for youth, students, and civil society actors\n- Promote intercultural dialogue and access to education\n- Combine formal and non-formal education with digital innovation and social impact\n- Support youth empowerment and cooperation across Europe and beyond\n\nTheir mission is inspired by Nicolaus Copernicus, symbolizing new perspectives and transformative thought through education and collaboration.\n\nLearn more:\n- https://copernicusberlin.org/en/about-us\n- https://copernicusberlin.org/en/media-about-us\n- https://copernicusberlin.org/en/volunteering"
+    },
+    {
+      "id": "85e4b233-0606-45e7-b0dd-09fb7a145304",
+      "ts": "2026-05-17T16:41:43.762603+00:00",
+      "session_id": "e0e6bf95-9d06-45c9-b46c-48f0601a3e9c",
+      "channel": "web",
+      "role": "user",
+      "text": "Hello"
+    },
+    {
+      "id": "b0da122f-9454-432f-97cf-d8e624abfecf",
+      "ts": "2026-05-17T16:41:43.764708+00:00",
+      "session_id": "e0e6bf95-9d06-45c9-b46c-48f0601a3e9c",
+      "channel": "web",
+      "role": "assistant",
+      "text": "Hi! I'm the Copernicus Berlin assistant. Ask me about our programs, events, scholarships, or how to get involved."
+    },
+    {
+      "id": "c4f890bc-7a72-4fd7-bd36-3e4d33f19d99",
+      "ts": "2026-05-17T16:41:56.895225+00:00",
+      "session_id": "e0e6bf95-9d06-45c9-b46c-48f0601a3e9c",
+      "channel": "web",
+      "role": "user",
+      "text": "Yes",
+      "meta": {
+        "kind": "satisfaction_response",
+        "value": "yes"
+      }
+    },
+    {
+      "id": "11411875-e1a0-41e5-835a-2134688f45dd",
+      "ts": "2026-05-17T16:42:28.324933+00:00",
+      "session_id": "e0e6bf95-9d06-45c9-b46c-48f0601a3e9c",
+      "channel": "web",
+      "role": "user",
+      "text": "tell me about copernicus berlin"
+    },
+    {
+      "id": "ea06d54e-2edd-464a-8411-49e15ca45a97",
+      "ts": "2026-05-17T16:42:31.844467+00:00",
+      "session_id": "e0e6bf95-9d06-45c9-b46c-48f0601a3e9c",
+      "channel": "web",
+      "role": "assistant",
+      "text": "Sure! Copernicus Berlin is a Berlin-based nonprofit organization dedicated to education and international exchange. Since 2000, they have been creating scholarships, European and international projects, training courses, internships, and exchange opportunities for young people, students, youth workers, and civil society actors.\n\nTheir mission focuses on expanding access to education, strengthening intercultural dialogue, and connecting people across Europe and beyond. Inspired by Nicolaus Copernicus, they emphasize openness to new ideas, respect for individuals, and commitment to a better future through education and social engagement.\n\nThe organization combines formal and non-formal education, international mobility, digital innovation, and social impact to empower youth and communities.\n\nIf you'd like, I can share more about their history, team, or specific programs!\n\nLearn more:\n- https://copernicusberlin.org/en/ies\n- https://copernicusberlin.org/en/erasmus\n- https://copernicusberlin.org/en/about-us"
+    },
+    {
+      "id": "a8514069-5cf8-4416-9427-f8362cfb9380",
+      "ts": "2026-05-17T16:46:34.406350+00:00",
+      "session_id": "e0e6bf95-9d06-45c9-b46c-48f0601a3e9c",
+      "channel": "web",
+      "role": "user",
+      "text": "Yes",
+      "meta": {
+        "kind": "satisfaction_response",
+        "value": "yes"
+      }
+    },
+    {
+      "id": "746c23ca-e326-4d74-9701-5eee10623c17",
+      "ts": "2026-05-17T16:54:43.032054+00:00",
+      "session_id": "1411a3ae-175c-410a-a1e3-bac4efa49e6e",
+      "channel": "web",
+      "role": "user",
+      "text": "What does Copernicus Berlin do?"
+    },
+    {
+      "id": "e93f71b8-a864-4d05-b64c-32936aa5fbac",
+      "ts": "2026-05-17T16:54:47.132311+00:00",
+      "session_id": "1411a3ae-175c-410a-a1e3-bac4efa49e6e",
+      "channel": "web",
+      "role": "assistant",
+      "text": "Copernicus Berlin is a nonprofit organization based in Berlin that focuses on education, international exchange, and youth empowerment. They:\n\n- Create scholarships and offer Erasmus+ projects\n- Organize training courses, internships, and exchange opportunities for young people, students, and youth workers\n- Promote intercultural dialogue and social impact through formal and non-formal education\n- Support international mobility and digital innovation\n\nTheir mission is to expand access to education and foster cooperation for a sustainable and inclusive future.\n\nLearn more:\n- https://copernicusberlin.org/en/about-us\n- https://copernicusberlin.org/en/media-about-us\n- https://copernicusberlin.org/en/volunteering"
+    },
+    {
+      "id": "463561ac-3231-4515-b952-0bc5d8fa58ac",
+      "ts": "2026-05-17T16:54:49.006519+00:00",
+      "session_id": "1411a3ae-175c-410a-a1e3-bac4efa49e6e",
+      "channel": "web",
+      "role": "user",
+      "text": "How can I volunteer?"
+    },
+    {
+      "id": "34f69b04-7ab4-433c-8a60-4fd77f3ab276",
+      "ts": "2026-05-17T16:54:52.501421+00:00",
+      "session_id": "1411a3ae-175c-410a-a1e3-bac4efa49e6e",
+      "channel": "web",
+      "role": "assistant",
+      "text": "Volunteering at Copernicus Berlin is a great way to create impact and develop your skills. Here's how you can get involved:\n\n- Join a motivated and creative team working on diverse projects and events.\n- Take on tasks individually or collaboratively, with roles evolving over time.\n- Develop leadership, communication, problem-solving, and time management skills.\n- Connect with professionals and expand your network.\n- Receive mentorship and a certificate upon successful completion.\n- Have a dedicated supervisor to guide you through your volunteering journey.\n\nTo start, you can visit their volunteering page and reach out to express your interest.\n\nIf you want, I can guide you to the exact page or contact form!\n\nLearn more:\n- https://copernicusberlin.org/en/volunteering\n- https://copernicusberlin.org/en/ies\n- https://copernicusberlin.org/en/erasmus"
+    },
+    {
+      "id": "9301fe58-2fcb-41a0-a4e6-fc321d9d4d20",
+      "ts": "2026-05-17T16:58:32.014245+00:00",
+      "session_id": "e0e6bf95-9d06-45c9-b46c-48f0601a3e9c",
+      "channel": "web",
+      "role": "user",
+      "text": "What Erasmus+ projects are available?"
+    },
+    {
+      "id": "bc42bd11-6672-4925-a8cf-f7cea6e30f60",
+      "ts": "2026-05-17T16:58:37.029718+00:00",
+      "session_id": "e0e6bf95-9d06-45c9-b46c-48f0601a3e9c",
+      "channel": "web",
+      "role": "assistant",
+      "text": "Copernicus Berlin offers various Erasmus+ projects focusing on education, mobility, and cooperation. Key project directions include:\n\n- **Learning Mobility for Youth Workers**: International seminars using non-formal learning methods like workshops, intercultural debates, and role plays.\n- **Partnerships for Cooperation (KA2)**: Strategic partnerships such as the \"Pathway to Equality\" project, which equips adult educators with skills in minority human rights education.\n- **Capacity Building**: Projects aimed at strengthening skills and long-term impact.\n- **Local and International Initiatives**: Community-driven and cross-border projects.\n- **Hackathons**: Innovation events with practical prototype development.\n\nYou can find more details on current and past Erasmus+ projects on their website. If you want specifics on ongoing calls or how to participate, I recommend contacting Copernicus Berlin directly.\n\nLearn more:\n- https://copernicusberlin.org/en/documents\n- https://copernicusberlin.org/en/projects\n- https://copernicusberlin.org/en/erasmus-projects"
+    },
+    {
+      "id": "64250cb8-49a0-4770-88b0-f5273d0b003c",
+      "ts": "2026-05-17T17:00:37.329938+00:00",
+      "session_id": "5fec0ad4-52cd-432d-aca8-6f4ee9c55887",
+      "channel": "web",
+      "role": "user",
+      "text": "What Erasmus+ projects are available?"
+    },
+    {
+      "id": "ff9c0c3c-0c41-4192-8a08-3d8e8ca1c121",
+      "ts": "2026-05-17T17:00:40.419651+00:00",
+      "session_id": "5fec0ad4-52cd-432d-aca8-6f4ee9c55887",
+      "channel": "web",
+      "role": "assistant",
+      "text": "Copernicus Berlin offers various Erasmus+ projects focusing on education, mobility, and cooperation. Key types include:\n\n- **Learning Mobility for Youth Workers**: International seminars using non-formal learning methods with global participants.\n- **Strategic Partnerships (Key Action 2)**: For example, the \"Pathway to Equality\" project supports adult educators in minority human rights education.\n- **Capacity Building**: Strengthening skills and long-term impact in education.\n- **Partnerships for Cooperation**: Collaborative projects under KA2.\n- Projects promoting **inclusiveness, accessibility, and green skills** in adult education.\n\nYou can find more details on specific projects and their priorities on the Copernicus Berlin website. If you want, I can guide you to particular project pages!\n\nLearn more:\n- https://copernicusberlin.org/en/documents\n- https://copernicusberlin.org/en/projects\n- https://copernicusberlin.org/en/erasmus-projects"
+    },
+    {
+      "id": "8ada5267-14b2-4770-a433-4310e9835ee4",
+      "ts": "2026-05-17T17:02:29.369256+00:00",
+      "session_id": "e0e6bf95-9d06-45c9-b46c-48f0601a3e9c",
+      "channel": "web",
+      "role": "user",
+      "text": "Yes",
+      "meta": {
+        "kind": "satisfaction_response",
+        "value": "yes"
+      }
+    },
+    {
+      "id": "1fdaff52-3583-4fa8-aadb-e38f419db09f",
+      "ts": "2026-05-17T17:02:41.086287+00:00",
+      "session_id": "78bcb4cb-88a3-4f10-9e7e-b5f1a415d981",
+      "channel": "web",
+      "role": "user",
+      "text": "What Erasmus+ projects are available?"
+    },
+    {
+      "id": "b0f55b8a-2a4a-4189-8c57-20ad9c6f4f93",
+      "ts": "2026-05-17T17:02:46.754609+00:00",
+      "session_id": "78bcb4cb-88a3-4f10-9e7e-b5f1a415d981",
+      "channel": "web",
+      "role": "assistant",
+      "text": "Copernicus Berlin offers various Erasmus+ projects focusing on education, mobility, and cooperation. Key types include:\n\n- **Learning Mobility for Youth Workers:** International seminars with non-formal learning methods like workshops, intercultural debates, and role plays.\n- **Strategic Partnerships (Key Action 2):** For example, the \"Pathway to Equality\" project supports adult educators in minority human rights education.\n- **Capacity Building:** Projects to strengthen skills and long-term impact.\n- **Partnerships for Cooperation:** Collaborative projects under KA2.\n- **Local and International Initiatives:** Community-driven and cross-border projects.\n\nThese projects aim to enhance skills, promote inclusion, and support sustainable development. For detailed current calls and projects, visiting the Erasmus+ section on the Copernicus Berlin website is recommended.\n\nLearn more:\n- https://copernicusberlin.org/en/documents\n- https://copernicusberlin.org/en/projects\n- https://copernicusberlin.org/en/erasmus-projects"
+    },
+    {
+      "id": "d81b72bf-ea7d-49a4-a107-8efc666c0b9b",
+      "ts": "2026-05-17T17:03:00.755512+00:00",
+      "session_id": "78bcb4cb-88a3-4f10-9e7e-b5f1a415d981",
+      "channel": "web",
+      "role": "user",
+      "text": "Yes",
+      "meta": {
+        "kind": "satisfaction_response",
+        "value": "yes"
+      }
+    },
+    {
+      "id": "c22f1d32-b258-4fc9-80f8-61269370ea7d",
+      "ts": "2026-05-17T17:03:19.466550+00:00",
+      "session_id": "78bcb4cb-88a3-4f10-9e7e-b5f1a415d981",
+      "channel": "web",
+      "role": "user",
+      "text": "Okay i am 20 years old am i eligible for the program ?"
+    },
+    {
+      "id": "12e38848-2e9a-4f6a-8065-c6a2d2c5b390",
+      "ts": "2026-05-17T17:03:23.171501+00:00",
+      "session_id": "78bcb4cb-88a3-4f10-9e7e-b5f1a415d981",
+      "channel": "web",
+      "role": "assistant",
+      "text": "Yes, at 20 years old, you are eligible to apply for Copernicus Berlin's programs like the Leaders for Future and IES programs. For example:\n\n- The IES program requires applicants to be students (Bachelor, Master, or Doctorate) and not older than 28 at the start.\n- The Leaders for Future program welcomes applicants who are at least 18 years old.\n\nMake sure you meet other requirements like language skills (at least B1 in English or German) and motivation. You can apply during the application period, usually starting September 1.\n\nIf you want, I can guide you on the application process!\n\nLearn more:\n- https://copernicusberlin.org/en/ongoing\n- https://copernicusberlin.org/en/summer\n- https://copernicusberlin.org/en/ies"
+    },
+    {
+      "id": "e3637341-f5c2-4077-994f-ab83b79415bf",
+      "ts": "2026-05-17T17:03:44.920582+00:00",
+      "session_id": "78bcb4cb-88a3-4f10-9e7e-b5f1a415d981",
+      "channel": "web",
+      "role": "user",
+      "text": "Yes",
+      "meta": {
+        "kind": "satisfaction_response",
+        "value": "yes"
+      }
+    },
+    {
+      "id": "7414e856-b3c1-41e1-ad78-b6865bbb280b",
+      "ts": "2026-05-17T17:04:24.284240+00:00",
+      "session_id": "78bcb4cb-88a3-4f10-9e7e-b5f1a415d981",
+      "channel": "web",
+      "role": "user",
+      "text": "how much scholarship money i can get ?"
+    },
+    {
+      "id": "b3df9409-b219-4fd0-8a04-c9e9ac0879b2",
+      "ts": "2026-05-17T17:04:28.801552+00:00",
+      "session_id": "78bcb4cb-88a3-4f10-9e7e-b5f1a415d981",
+      "channel": "web",
+      "role": "assistant",
+      "text": "Scholarship amounts vary by program at Copernicus Berlin:\n\n- For the **Leaders for Future (LF) program**, a full scholarship includes monthly pocket money plus coverage of accommodation, insurance, events, mentoring, and more. Pocket money is part of the overall package but the exact monthly amount isn't specified here.\n\n- For the **Professionals in Residence (PiR) program**, the base pocket money is **EUR 500/month**, which can increase if you contribute additional resources to Copernicus Berlin.\n\n- For the **IES program**, a full scholarship includes about **EUR 3,000 pocket money** over the program duration, plus coverage of accommodation, insurance, cultural events, seminars, and other costs. The total scholarship value is approximately **EUR 15,000**.\n\nTravel expenses are generally not covered.\n\nIf you want details for a specific program, I can help with that!\n\nLearn more:\n- https://copernicusberlin.org/en/summer\n- https://copernicusberlin.org/en/pir\n- https://copernicusberlin.org/en/ongoing"
+    },
+    {
+      "id": "d00118c5-c36c-4c6b-8433-76053f0e31bb",
+      "ts": "2026-05-17T17:14:12.542188+00:00",
+      "session_id": "ies-test",
+      "channel": "web",
+      "role": "user",
+      "text": "How much does the full IES scholarship cost and what is the breakdown?"
+    },
+    {
+      "id": "e1ca5951-a31c-4c91-87e5-ba51dde75eee",
+      "ts": "2026-05-17T17:14:17.080401+00:00",
+      "session_id": "ies-test",
+      "channel": "web",
+      "role": "assistant",
+      "text": "The full IES scholarship at Copernicus Berlin amounts to approximately **15,000 EUR**. The cost breakdown is as follows:\n\n- Accommodation: 5,400 EUR  \n- Administrative costs: 790 EUR  \n- Consulting and mentoring: 750 EUR  \n- Cultural events: 250 EUR  \n- Educational tour: 560 EUR  \n- Enrollment fee: 320 EUR  \n- Health insurance: 900 EUR  \n- International seminars: 1,330 EUR  \n- Liability insurance: 110 EUR  \n- Pocket money: 3,000 EUR  \n- Social meetings: 700 EUR  \n- Welcome pack and materials: 350 EUR  \n- Workshops and trainings: 540 EUR  \n\nLet me know if you want details about application or other programs!\n\nLearn more:\n- https://copernicusberlin.org/en/summer\n- https://copernicusberlin.org/en/ongoing\n- https://copernicusberlin.org/en/ies"
+    },
+    {
+      "id": "e943db46-96a1-4f36-b462-74e2af5f0acc",
+      "ts": "2026-05-17T17:25:59.798940+00:00",
+      "session_id": "ies-v2",
+      "channel": "web",
+      "role": "user",
+      "text": "How much does the full IES scholarship cost and what is the breakdown?"
+    },
+    {
+      "id": "9f444a22-6154-4631-b4d6-d8f4986d7f6b",
+      "ts": "2026-05-17T17:26:03.240869+00:00",
+      "session_id": "ies-v2",
+      "channel": "web",
+      "role": "assistant",
+      "text": "The full IES scholarship at Copernicus Berlin amounts to approximately **15,000 EUR**. The breakdown is as follows:\n\n- Accommodation: 5,400 EUR  \n- Administrative costs: 790 EUR  \n- Consulting and mentoring: 750 EUR  \n- Cultural events: 250 EUR  \n- Educational tour: 560 EUR  \n- Enrollment fee: 320 EUR  \n- Health Insurance: 900 EUR  \n- International seminars: 1,330 EUR  \n- Liability insurance: 110 EUR  \n- Pocket money: 3,000 EUR  \n- Social meetings: 700 EUR  \n- Welcome pack and materials: 350 EUR  \n- Workshops and trainings: 540 EUR  \n\nLet me know if you want details on how to apply or other programs!\n\nLearn more:\n- https://copernicusberlin.org/en/summer\n- https://copernicusberlin.org/en/ongoing\n- https://copernicusberlin.org/en/ies"
+    },
+    {
+      "id": "907d9e98-9b5a-468f-b972-43531fceb76c",
+      "ts": "2026-05-17T17:27:10.360213+00:00",
+      "session_id": "ies-v3",
+      "channel": "web",
+      "role": "user",
+      "text": "How much does the full IES scholarship cost and what is the breakdown?"
+    },
+    {
+      "id": "6e1d3014-1714-4a85-ac2c-34e6418c1b4a",
+      "ts": "2026-05-17T17:27:15.029963+00:00",
+      "session_id": "ies-v3",
+      "channel": "web",
+      "role": "assistant",
+      "text": "The full International Excellence Scholarship (IES) at Copernicus Berlin amounts to approximately **15,000 EUR**. The breakdown is as follows:\n\n- Accommodation: 5,400 EUR  \n- Administrative costs: 790 EUR  \n- Consulting and mentoring: 750 EUR  \n- Cultural events: 250 EUR  \n- Educational tour: 560 EUR  \n- Enrollment fee: 320 EUR  \n- Health insurance: 900 EUR  \n- International seminars: 1,330 EUR  \n- Liability insurance: 110 EUR  \n- Pocket money: 3,000 EUR  \n- Social meetings: 700 EUR  \n- Welcome pack and materials: 350 EUR  \n- Workshops and trainings: 540 EUR  \n\nLet me know if you want details on how to apply or other programs!\n\nLearn more:\n- https://copernicusberlin.org/en/summer\n- https://copernicusberlin.org/en/ongoing\n- https://copernicusberlin.org/en/ies"
+    },
+    {
+      "id": "b45c63d0-909a-43bd-bde3-16ac1f6d799f",
+      "ts": "2026-05-17T17:29:00.652320+00:00",
+      "session_id": "ies-fresh",
+      "channel": "web",
+      "role": "user",
+      "text": "How much does the full IES scholarship cost and what is the breakdown?"
+    },
+    {
+      "id": "b87d6dfc-4480-40a4-adbd-eb2ba17a22e2",
+      "ts": "2026-05-17T17:29:04.281018+00:00",
+      "session_id": "ies-fresh",
+      "channel": "web",
+      "role": "assistant",
+      "text": "The full IES scholarship at Copernicus Berlin amounts to approximately **12,590 EUR**. The cost breakdown is as follows:\n\n- Accommodation: 4,950 EUR  \n- Administrative costs: 790 EUR  \n- Consulting and mentoring: 750 EUR  \n- Cultural events: 250 EUR  \n- Educational tour: 560 EUR  \n- Enrollment fee: 320 EUR  \n- Health insurance: 750 EUR  \n- International seminars: 1,330 EUR  \n- Liability insurance: 110 EUR  \n- Pocket money: 1,200 EUR  \n- Social meetings: 690 EUR  \n- Welcome pack and materials: 350 EUR  \n- Workshops and trainings: 540 EUR  \n\nNote: Accommodation costs for two months (1,650 EUR) must be paid by the participant; the rest is covered by Copernicus Berlin.\n\nLet me know if you want details on what the scholarship covers or other aspects!\n\nLearn more:\n- https://copernicusberlin.org/en/ies\n- https://copernicusberlin.org/en/summer"
+    },
+    {
+      "id": "5979a688-afb1-466c-88e3-1875f1e47a29",
+      "ts": "2026-05-17T17:29:15.517571+00:00",
+      "session_id": "ies-types",
+      "channel": "web",
+      "role": "user",
+      "text": "What are the differences between Full Scholarship, Partial Scholarship Plus, and Partial Scholarship for IES?"
+    },
+    {
+      "id": "5c888c0d-ba26-4300-b3aa-dc9f354d3eb8",
+      "ts": "2026-05-17T17:29:19.559584+00:00",
+      "session_id": "ies-types",
+      "channel": "web",
+      "role": "assistant",
+      "text": "Here are the differences between the IES scholarship types:\n\n- **Full Scholarship**\n  - Pocket money paid monthly\n  - Health insurance costs reimbursed\n  - Costs for accommodation, enrollment, liability insurance, educational trips, social meetings, administration, welcome package, cultural events, international seminars, consulting, mentoring, and workshops covered by Copernicus Berlin\n  - Travel expenses not covered\n\n- **Partial Scholarship Plus**\n  - Pocket money paid monthly\n  - Costs for accommodation, enrollment, liability insurance, educational trips, social meetings, administration, welcome package, cultural events, international seminars, consulting, mentoring, and workshops covered by Copernicus Berlin\n  - Health insurance costs NOT covered\n  - Travel expenses not covered\n\n- **Partial Scholarship**\n  - Pocket money paid monthly\n  - Costs for enrollment, liability insurance, educational trips, social meetings, administration, welcome package, cultural events, international seminars, consulting, mentoring, and workshops covered by Copernicus Berlin\n  - Health insurance costs NOT covered\n  - Travel expenses not covered\n\nThe main differences are in coverage of accommodation and health insurance costs.  \n(Source: copernicusberlin.org/en/ies)\n\nLearn more:\n- https://copernicusberlin.org/en/ies\n- https://copernicusberlin.org/en/ukrainian-talent"
+    },
+    {
+      "id": "71c0707d-8237-4de8-9334-6c7f67442b12",
+      "ts": "2026-05-17T17:29:38.691691+00:00",
+      "session_id": "c8ad62f9-79ec-44da-a4cf-761cff16567b",
+      "channel": "web",
+      "role": "user",
+      "text": "What is Copernicus Berlin?"
+    },
+    {
+      "id": "1916e338-8f78-4179-91d9-e539a66680cf",
+      "ts": "2026-05-17T17:29:44.552334+00:00",
+      "session_id": "c8ad62f9-79ec-44da-a4cf-761cff16567b",
+      "channel": "web",
+      "role": "assistant",
+      "text": "Copernicus Berlin e.V. is a Berlin-based nonprofit organization focused on education, international exchange, and youth empowerment. Since 2000, it has created scholarships, European and international projects, training courses, internships, and exchange opportunities for young people, students, youth workers, and civil society actors. The organization promotes intercultural dialogue, digital innovation, and social impact through formal and non-formal education.\n\nThe name honors Nicolaus Copernicus, symbolizing intellectual courage and new perspectives, reflecting the organization's mission to foster learning, cooperation, and positive change.\n\nIf you'd like to know more about their history or team, I can help with that too!\n\nLearn more:\n- https://copernicusberlin.org/en/about-us\n- https://copernicusberlin.org/en/media-about-us\n- https://copernicusberlin.org/en/volunteering"
+    },
+    {
+      "id": "cd7d7143-b7e9-459f-8208-d6244eb75cb1",
+      "ts": "2026-05-17T17:29:46.813218+00:00",
+      "session_id": "c8ad62f9-79ec-44da-a4cf-761cff16567b",
+      "channel": "web",
+      "role": "user",
+      "text": "How can I volunteer?"
+    },
+    {
+      "id": "abd798f5-2a07-480e-a5d6-f8d415739df1",
+      "ts": "2026-05-17T17:29:49.926350+00:00",
+      "session_id": "c8ad62f9-79ec-44da-a4cf-761cff16567b",
+      "channel": "web",
+      "role": "assistant",
+      "text": "Volunteering with Copernicus Berlin is a rewarding way to contribute to their mission and develop your skills. Here's how you can get involved:\n\n- **Prepare your CV:** Include your education, work experience, and relevant skills. You can use their online CV-builder.\n- **Specify your availability:** Indicate how long you can volunteer to help tailor your experience.\n- **Choose your start date:** Let them know when you'd like to begin.\n- **Apply via the CAMPUS platform:** Submit your application there for review.\n\nAs a volunteer, you'll gain leadership, communication, problem-solving, and project management skills, plus networking opportunities and a certificate upon completion.\n\nIf you want, I can guide you through the application process or provide more details!\n\nSource: https://copernicusberlin.org/en/volunteering\n\nLearn more:\n- https://copernicusberlin.org/en/volunteering\n- https://copernicusberlin.org/en/ies"
+    },
+    {
+      "id": "2866ed75-4d0f-451e-a148-6189ec7148dd",
+      "ts": "2026-05-17T17:29:54.934105+00:00",
+      "session_id": "c8ad62f9-79ec-44da-a4cf-761cff16567b",
+      "channel": "web",
+      "role": "user",
+      "text": "Tell me about Erasmus"
+    },
+    {
+      "id": "8c75c892-9530-49a7-8d86-f8eded7e56a8",
+      "ts": "2026-05-17T17:29:58.537604+00:00",
+      "session_id": "c8ad62f9-79ec-44da-a4cf-761cff16567b",
+      "channel": "web",
+      "role": "assistant",
+      "text": "Erasmus+ at Copernicus Berlin is part of the EU's education, training, youth, and sport program (2021-2027) aimed at personal and professional development. It supports high-quality, inclusive education and non-formal learning to equip participants with skills for democratic participation, intercultural understanding, and labor market success.\n\nKey features include:\n- Mobility opportunities for learners and staff\n- Focus on green transition and sustainability education\n- Strengthening cooperation between higher education institutions\n- Promoting innovative learning and teaching practices\n- Supporting digital tools and virtual/blended cooperation\n\nCopernicus Berlin coordinates and partners in Erasmus+ projects, offering international seminars, youth worker mobility, and more.\n\nIf you want details on specific Erasmus+ projects or how to participate, just ask!\n\nSource: https://copernicusberlin.org/en/erasmus\n\nLearn more:\n- https://copernicusberlin.org/en/erasmus\n- https://copernicusberlin.org/en/erasmus-projects"
+    },
+    {
+      "id": "fab5e8e9-fd2a-4a2a-9615-4aecbed11261",
+      "ts": "2026-05-17T17:34:14.862688+00:00",
+      "session_id": "78bcb4cb-88a3-4f10-9e7e-b5f1a415d981",
+      "channel": "web",
+      "role": "user",
+      "text": "What does Copernicus Berlin do?"
+    },
+    {
+      "id": "dd5d5f92-a8a7-43dc-80cc-2f3bcc5af3c4",
+      "ts": "2026-05-17T17:34:17.829432+00:00",
+      "session_id": "78bcb4cb-88a3-4f10-9e7e-b5f1a415d981",
+      "channel": "web",
+      "role": "assistant",
+      "text": "Copernicus Berlin is a nonprofit organization based in Berlin that focuses on education and international exchange. They:\n\n- Create scholarships and training courses\n- Organize European and international projects\n- Offer internships and exchange opportunities for youth, students, and civil society actors\n- Promote intercultural dialogue and social impact\n- Combine formal and non-formal education with digital innovation\n\nTheir mission is to expand access to education, foster cooperation, and empower young people for a sustainable and inclusive future.\n\nLearn more:\n- https://copernicusberlin.org/en/about-us\n- https://copernicusberlin.org/en/media-about-us\n- https://copernicusberlin.org/en/volunteering"
+    },
+    {
+      "id": "719d574e-6d67-4b31-b685-5d9c3134cfc1",
+      "ts": "2026-05-17T17:34:44.167073+00:00",
+      "session_id": "78bcb4cb-88a3-4f10-9e7e-b5f1a415d981",
+      "channel": "web",
+      "role": "user",
+      "text": "tell me about types of scholarships"
+    },
+    {
+      "id": "93b995b8-4d12-4efe-903f-c808cb3538fa",
+      "ts": "2026-05-17T17:34:52.229503+00:00",
+      "session_id": "78bcb4cb-88a3-4f10-9e7e-b5f1a415d981",
+      "channel": "web",
+      "role": "assistant",
+      "text": "Copernicus Berlin offers different scholarship types, including:\n\n- **Ukrainian Talent Scholarship in Berlin**:\n  - Full Scholarship: Covers monthly pocket money, health insurance reimbursement, accommodation, enrollment, liability insurance, educational trips, social events, administration, cultural events, seminars, consulting, mentoring, and workshops. Travel expenses are not covered.\n  - Partial Scholarship Plus: Offers partial support (details not fully specified here).\n\n- **IES Program Scholarships**:\n  - Number of scholarships varies each semester based on funds and capacity.\n  - Support includes visa assistance, invitation letters, and guidance.\n  - Scholarship holders receive a certificate upon completion, with possible recommendation letters for outstanding performance.\n\nIf you want details on a specific scholarship program, please let me know!\n\nLearn more:\n- https://copernicusberlin.org/en/ies\n- https://copernicusberlin.org/en/privacy-policy\n- https://copernicusberlin.org/en/ukrainian-talent"
+    },
+    {
+      "id": "cf17d439-875b-4943-8a75-a5278b9ef098",
+      "ts": "2026-05-17T17:35:10.705408+00:00",
+      "session_id": "78bcb4cb-88a3-4f10-9e7e-b5f1a415d981",
+      "channel": "web",
+      "role": "user",
+      "text": "how much funding for ies"
+    },
+    {
+      "id": "fb297d2a-beab-40ef-813c-8f3ebae7090b",
+      "ts": "2026-05-17T17:35:19.219169+00:00",
+      "session_id": "78bcb4cb-88a3-4f10-9e7e-b5f1a415d981",
+      "channel": "web",
+      "role": "assistant",
+      "text": "The IES Program at Copernicus Berlin offers three types of scholarships with different funding coverage:\n\n- **Full Scholarship**:\n  - Monthly pocket money paid\n  - Health insurance costs reimbursed\n  - Costs for accommodation, enrollment, liability insurance, educational trips, social meetings, administration, welcome package, cultural events, international seminars, consulting, mentoring, and workshops covered directly by Copernicus Berlin\n  - Travel expenses are not covered\n\n- **Partial Scholarship Plus**:\n  - Monthly pocket money paid\n  - Costs for accommodation, enrollment, liability insurance, educational trips, social meetings, administration, welcome package, cultural events, international seminars, consulting, mentoring, and workshops covered directly by Copernicus Berlin\n  - Travel expenses not covered\n  - Health insurance costs not covered\n\n- **Partial Scholarship**:\n  - Monthly pocket money paid\n  - Costs for enrollment, liability insurance, educational trips, social meetings, administration, welcome package, cultural events, international seminars, consulting, mentoring, and workshops covered directly by Copernicus Berlin\n  - Travel expenses not covered\n  - Health insurance co-payment not covered\n\nTravel expenses are not covered in any scholarship type.\n\nIf you want more details on eligibility or application, feel free to ask!\n\nSource: https://copernicusberlin.org/en/ies\n\nLearn more:\n- https://copernicusberlin.org/en/ies\n- https://copernicusberlin.org/en/summer"
+    },
+    {
+      "id": "d3a0d11b-ea1a-41e3-b546-71097389b839",
+      "ts": "2026-05-17T17:35:40.764694+00:00",
+      "session_id": "78bcb4cb-88a3-4f10-9e7e-b5f1a415d981",
+      "channel": "web",
+      "role": "user",
+      "text": "how much is full scholarship"
+    },
+    {
+      "id": "5b290780-7520-4d38-8a3d-fa92a2a37e91",
+      "ts": "2026-05-17T17:35:44.107170+00:00",
+      "session_id": "78bcb4cb-88a3-4f10-9e7e-b5f1a415d981",
+      "channel": "web",
+      "role": "assistant",
+      "text": "For the Leaders for Future (LF) program, a full scholarship covers these costs:\n\n- Accommodation: **5880 EUR**\n- Administrative expenses: **650 EUR**\n- Consultancy and support: **250 EUR**\n- Events: **590 EUR**\n- Liability insurance: **100 EUR**\n- Pocket money: **400 EUR**\n\nAll these are covered directly by Copernicus Berlin, but travel expenses are not included.\n\nIf you meant the full scholarship for the IES program or another program, please specify!\n\nSource: https://copernicusberlin.org/en/summer\n\nLearn more:\n- https://copernicusberlin.org/en/summer\n- https://copernicusberlin.org/en/pir\n- https://copernicusberlin.org/en/ongoing"
+    },
+    {
+      "id": "e21af4f0-11fc-45b7-a7ba-bc6c103195f4",
+      "ts": "2026-05-17T17:36:03.089793+00:00",
+      "session_id": "78bcb4cb-88a3-4f10-9e7e-b5f1a415d981",
+      "channel": "web",
+      "role": "user",
+      "text": "i mean for ies how much is full scholarship ?"
+    },
+    {
+      "id": "7e983bec-7fa8-4421-a22e-33fddacd3883",
+      "ts": "2026-05-17T17:36:06.167173+00:00",
+      "session_id": "78bcb4cb-88a3-4f10-9e7e-b5f1a415d981",
+      "channel": "web",
+      "role": "assistant",
+      "text": "A full scholarship for the IES program amounts to approximately **12,590 EUR** and includes:\n\n- Accommodation: 4,950 EUR\n- Administrative costs: 790 EUR\n- Consulting and mentoring: 750 EUR\n- Cultural events: 250 EUR\n- Educational tour: 560 EUR\n- Enrollment fee: 320 EUR\n- Health insurance: 750 EUR\n- International seminars: 1,330 EUR\n- Liability insurance: 110 EUR\n- Pocket money: 1,200 EUR\n- Social meetings: 690 EUR\n- Welcome pack and materials: 350 EUR\n- Workshops and trainings: 540 EUR\n\nTravel expenses are not covered.\n\nSource: https://copernicusberlin.org/en/ies\n\nLearn more:\n- https://copernicusberlin.org/en/ies\n- https://copernicusberlin.org/en/pir"
+    },
+    {
+      "id": "7e083914-c477-4a5b-b567-6ec5360e1e37",
+      "ts": "2026-05-17T17:36:21.227958+00:00",
+      "session_id": "78bcb4cb-88a3-4f10-9e7e-b5f1a415d981",
+      "channel": "web",
+      "role": "user",
+      "text": "who is Alex"
+    },
+    {
+      "id": "7e1e70b6-3a6e-433d-a2d9-6a37a228accc",
+      "ts": "2026-05-17T17:36:23.436466+00:00",
+      "session_id": "78bcb4cb-88a3-4f10-9e7e-b5f1a415d981",
+      "channel": "web",
+      "role": "assistant",
+      "text": "Alex refers to Aleksandr Rasskazchikov, who is part of the Copernicus Berlin Executive Team. He serves as Head of IT and Digital Learning, Project and Partnership Coordinator, and Trainer.\n\nIf you want to know more about him or other team members, just ask!\n\nSource: https://copernicusberlin.org/en/our-team\n\nLearn more:\n- https://copernicusberlin.org/en/our-team\n- https://copernicusberlin.org/en/hack\n- https://copernicusberlin.org/en/lf"
+    },
+    {
+      "id": "2cea406c-b1c2-47db-9f77-77f4169a28a9",
+      "ts": "2026-05-17T17:44:46.002291+00:00",
+      "session_id": "src-strip-test",
+      "channel": "web",
+      "role": "user",
+      "text": "How much does the full IES scholarship cost and what is the breakdown?"
+    },
+    {
+      "id": "1fc725b4-1a90-48a9-9b34-5e011f10563e",
+      "ts": "2026-05-17T17:44:50.371964+00:00",
+      "session_id": "src-strip-test",
+      "channel": "web",
+      "role": "assistant",
+      "text": "The full IES scholarship at Copernicus Berlin amounts to approximately **12,590 EUR**. The cost breakdown is as follows:\n\n- Accommodation: 4,950 EUR  \n- Administrative costs: 790 EUR  \n- Consulting and mentoring: 750 EUR  \n- Cultural events: 250 EUR  \n- Educational tour: 560 EUR  \n- Enrollment fee: 320 EUR  \n- Health insurance: 750 EUR  \n- International seminars: 1,330 EUR  \n- Liability insurance: 110 EUR  \n- Pocket money: 1,200 EUR  \n- Social meetings: 690 EUR  \n- Welcome pack and materials: 350 EUR  \n- Workshops and trainings: 540 EUR  \n\nNote: Travel expenses are not covered, and accommodation costs for two months (1,650 EUR) must be paid by the participant; the rest is covered by Copernicus Berlin.\n\nLearn more:\n- https://copernicusberlin.org/en/ies\n- https://copernicusberlin.org/en/summer"
+    },
+    {
+      "id": "097b66fe-e151-4923-9798-be4181131ef2",
+      "ts": "2026-05-17T17:45:30.777990+00:00",
+      "session_id": "stream-strip",
+      "channel": "web",
+      "role": "user",
+      "text": "Who is Alex on the team?"
+    },
+    {
+      "id": "aecd7ed3-b6ae-4a57-93d2-213e8217adbb",
+      "ts": "2026-05-17T17:45:33.670281+00:00",
+      "session_id": "stream-strip",
+      "channel": "web",
+      "role": "assistant",
+      "text": "Alex on the Copernicus Berlin team is Aleksandr Rasskazchikov. He is the Head of IT and Digital Learning, Project and Partnership Coordinator, and Trainer.\n\nLearn more:\n- https://copernicusberlin.org/en/our-team\n- https://copernicusberlin.org/en/career"
+    },
+    {
+      "id": "81605250-30dc-42f1-b7e3-fc6f738a8618",
+      "ts": "2026-05-17T17:53:08.932154+00:00",
+      "session_id": "7a8e90d2-ead8-4776-8347-0ac8982b3a0a",
+      "channel": "web",
+      "role": "user",
+      "text": "Support request\nName: Azimbek\nEmail: azimbekolimbekov1@gmail.com\nQuestion: How to come to berlin bro?"
+    },
+    {
+      "id": "83943425-2358-427a-9922-c99acced30c8",
+      "ts": "2026-05-17T17:53:08.933101+00:00",
+      "session_id": "7a8e90d2-ead8-4776-8347-0ac8982b3a0a",
+      "channel": "web",
+      "role": "assistant",
+      "text": "Thanks! Your request has been sent to our team — someone will reply to your email shortly."
+    },
+    {
+      "id": "6424ef79-65d0-4324-97a0-578df68f5b5e",
+      "ts": "2026-05-17T17:57:00.175101+00:00",
+      "session_id": "7a8e90d2-ead8-4776-8347-0ac8982b3a0a",
+      "channel": "web",
+      "role": "user",
+      "text": "okay"
+    },
+    {
+      "id": "fc87d10f-705e-4e89-b6d0-7ce864d394ab",
+      "ts": "2026-05-17T17:57:00.178426+00:00",
+      "session_id": "7a8e90d2-ead8-4776-8347-0ac8982b3a0a",
+      "channel": "web",
+      "role": "assistant",
+      "text": "Hi! I'm the Copernicus Berlin assistant. Ask me about our programs, events, scholarships, or how to get involved."
+    },
+    {
+      "id": "53f5c1b9-5f56-41fb-84c4-03b09d2b6b5d",
+      "ts": "2026-05-17T17:57:09.349654+00:00",
+      "session_id": "7a8e90d2-ead8-4776-8347-0ac8982b3a0a",
+      "channel": "web",
+      "role": "user",
+      "text": "hi"
+    },
+    {
+      "id": "78bb1f98-0a0b-4ad8-8c6f-50df7a95fa7e",
+      "ts": "2026-05-17T17:57:09.352249+00:00",
+      "session_id": "7a8e90d2-ead8-4776-8347-0ac8982b3a0a",
+      "channel": "web",
+      "role": "assistant",
+      "text": "Hi! I'm the Copernicus Berlin assistant. Ask me about our programs, events, scholarships, or how to get involved."
+    },
+    {
+      "id": "134c988e-ff41-4d55-8b18-f9592589e6bb",
+      "ts": "2026-05-17T17:57:15.026672+00:00",
+      "session_id": "7a8e90d2-ead8-4776-8347-0ac8982b3a0a",
+      "channel": "web",
+      "role": "user",
+      "text": "how are you"
+    },
+    {
+      "id": "128fd12e-7208-4ab9-b69d-a434c43f4bc3",
+      "ts": "2026-05-17T18:05:59.048679+00:00",
+      "session_id": "da7e5c13-31d3-4ad9-ba63-bf8670f1f1ed",
+      "channel": "web",
+      "role": "user",
+      "text": "Support request\nName: Azim\nEmail: azim@example.com\nQuestion: Can someone advise me on the IES application?"
+    },
+    {
+      "id": "24ac0043-70f4-4fc8-ad10-1b632f8016c7",
+      "ts": "2026-05-17T18:05:59.050028+00:00",
+      "session_id": "da7e5c13-31d3-4ad9-ba63-bf8670f1f1ed",
+      "channel": "web",
+      "role": "assistant",
+      "text": "Thanks! Your request has been sent to our team — someone will reply to your email shortly."
+    },
+    {
+      "id": "04cf815c-337d-4069-92d1-19cf5aa37ef6",
+      "ts": "2026-05-17T18:06:01.702396+00:00",
+      "session_id": "da7e5c13-31d3-4ad9-ba63-bf8670f1f1ed",
+      "channel": "web",
+      "role": "user",
+      "text": "What is the deadline to apply?"
+    },
+    {
+      "id": "36087dd9-e1ad-4ca2-85f4-45a974462c1a",
+      "ts": "2026-05-17T18:06:05.173194+00:00",
+      "session_id": "da7e5c13-31d3-4ad9-ba63-bf8670f1f1ed",
+      "channel": "web",
+      "role": "assistant",
+      "text": "The application deadline for the Leaders for Future program is October 10, 2024. The application period runs from September 1, 2024, to October 10, 2024.\n\nLearn more:\n- https://copernicusberlin.org/en/ies\n- https://copernicusberlin.org/en/scholarship"
+    },
+    {
+      "id": "1b0148e0-df0d-41f3-8ac8-c0f5a6642164",
+      "ts": "2026-05-17T18:08:02.047931+00:00",
+      "session_id": "7a8e90d2-ead8-4776-8347-0ac8982b3a0a",
+      "channel": "web",
+      "role": "user",
+      "text": "What does Copernicus Berlin do?"
+    },
+    {
+      "id": "81a81d29-3c91-468d-b27d-c1ebcd5bc4f4",
+      "ts": "2026-05-17T18:08:07.621170+00:00",
+      "session_id": "7a8e90d2-ead8-4776-8347-0ac8982b3a0a",
+      "channel": "web",
+      "role": "assistant",
+      "text": "Copernicus Berlin is a nonprofit organization based in Berlin that focuses on education and international exchange. They:\n\n- Create scholarships and training courses for young people, students, and youth workers\n- Organize European and international projects and internships\n- Promote intercultural dialogue and social impact through formal and non-formal education\n- Support international mobility and digital innovation\n- Empower youth and civil society actors across Europe and beyond\n\nTheir mission is to expand access to education, foster cooperation, and inspire positive change through learning and exchange.\n\nLearn more:\n- https://copernicusberlin.org/en/about-us\n- https://copernicusberlin.org/en/media-about-us"
+    },
+    {
+      "id": "64cebb42-831b-4c50-ab30-ef350fb5af36",
+      "ts": "2026-05-17T18:08:21.350863+00:00",
+      "session_id": "7a8e90d2-ead8-4776-8347-0ac8982b3a0a",
+      "channel": "web",
+      "role": "user",
+      "text": "Support request\nName: Azimbek\nEmail: azimbekolimbekov1@gmail.com\nQuestion: Hello guys how are youuu"
+    },
+    {
+      "id": "90cd83da-ae04-4ed6-ba6f-c3e46cdb0e1f",
+      "ts": "2026-05-17T18:08:21.352165+00:00",
+      "session_id": "7a8e90d2-ead8-4776-8347-0ac8982b3a0a",
+      "channel": "web",
+      "role": "assistant",
+      "text": "Thanks! Your request has been sent to our team — someone will reply to your email shortly."
+    },
+    {
+      "id": "336bbc89-a65f-4d46-bdf7-3161abb1c1f5",
+      "ts": "2026-05-17T18:08:24.796125+00:00",
+      "session_id": "7a8e90d2-ead8-4776-8347-0ac8982b3a0a",
+      "channel": "web",
+      "role": "user",
+      "text": "Yes",
+      "meta": {
+        "kind": "satisfaction_response",
+        "value": "yes"
+      }
+    },
+    {
+      "id": "d175e415-41d0-4449-b3a5-05e84b1fe73d",
+      "ts": "2026-05-17T18:08:36.773292+00:00",
+      "session_id": "7a8e90d2-ead8-4776-8347-0ac8982b3a0a",
+      "channel": "web",
+      "role": "user",
+      "text": "Okay tell me fun facts about copernicus berlin"
+    },
+    {
+      "id": "e2b1d651-05fa-421e-9e75-637ba534a6ca",
+      "ts": "2026-05-17T18:08:40.160084+00:00",
+      "session_id": "7a8e90d2-ead8-4776-8347-0ac8982b3a0a",
+      "channel": "web",
+      "role": "assistant",
+      "text": "Here are some fun facts about Copernicus Berlin:\n\n- They organize a wide variety of activities beyond formal trainings, including ideathons, small hackathons, cultural evenings, and community meetups.\n- Their scholarship holders get to participate in diverse events like study visits, volunteering actions, and informal networking gatherings.\n- Copernicus Berlin has a creative side called COBI Studio, where they tell stories through comics, stickers, and postcards to share their experiences in a fun, artistic way.\n- They run a popular Summer Internship Program called LEADERS for FUTURE, combining summer fun in Berlin with professional growth and language learning.\n- The organization actively supports young people to build skills, networks, and career opportunities both in Germany and internationally.\n\nIf you want to explore their comics and storytelling, check out the COBI Studio section on their website!\n\nLearn more:\n- https://copernicusberlin.org/en/ies\n- https://copernicusberlin.org/en/cobi-studio/comics"
+    },
+    {
+      "id": "8f1e3ed7-3619-44d1-97a0-4156acda1967",
+      "ts": "2026-05-17T18:09:20.244718+00:00",
+      "session_id": "7a8e90d2-ead8-4776-8347-0ac8982b3a0a",
+      "channel": "web",
+      "role": "operator",
+      "text": "yaaa"
+    },
+    {
+      "id": "cc3a03bc-7fee-427d-81f5-5e0ff0e12e01",
+      "ts": "2026-05-18T08:05:39.110955+00:00",
+      "session_id": "sess-emma-1",
+      "channel": "web",
+      "role": "user",
+      "text": "Hi! What does Copernicus Berlin do?"
+    },
+    {
+      "id": "14fdb99c-457e-443e-8c18-7c2406a6709f",
+      "ts": "2026-05-18T08:05:49.502740+00:00",
+      "session_id": "sess-emma-1",
+      "channel": "web",
+      "role": "assistant",
+      "text": "Hello! Copernicus Berlin is a nonprofit organization based in Berlin that focuses on education and international exchange. Since 2000, they have been creating scholarships, European and international projects, training courses, internships, and exchange opportunities for young people, students, youth workers, and civil society actors. Their mission is to expand access to education, strengthen intercultural dialogue, and connect people across Europe and beyond through formal and non-formal education, international mobility, digital innovation, and social impact. They are inspired by Nicolaus Copernicus, symbolizing intellectual courage and new perspectives.\n\nLearn more:\n- https://copernicusberlin.org/en/about-us\n- https://copernicusberlin.org/en/volunteering"
+    },
+    {
+      "id": "d2cc981b-39a4-4a69-ba24-9c815f397a2c",
+      "ts": "2026-05-18T08:05:49.909893+00:00",
+      "session_id": "sess-emma-1",
+      "channel": "web",
+      "role": "user",
+      "text": "How can I apply for the IES scholarship?"
+    },
+    {
+      "id": "8cbd7f94-5d55-4eda-a95d-9500f480d020",
+      "ts": "2026-05-18T08:05:52.705182+00:00",
+      "session_id": "sess-emma-1",
+      "channel": "web",
+      "role": "assistant",
+      "text": "To apply for the IES scholarship at Copernicus Berlin, you need to follow a three-stage application process:\n\n- Submit an online application through the CAMPUS platform during the application period (e.g., April 7 to June 30, 2026, for Summer Semester 2027).\n- Complete assigned tasks, including a short video introduction, if selected.\n- Participate in an online interview phase if you pass the task phase.\n\nAfter selection, you will join online onboarding and initial volunteering tasks before the in-person part in Berlin.\n\nMake sure you meet the eligibility criteria, including having at least B1 level in German or English and being enrolled in any field of study.\n\nYou can apply directly on their website when the application period opens. \n\nIf you want, I can guide you to the application page!\n\nLearn more:\n- https://copernicusberlin.org/en/ies\n- https://copernicusberlin.org/en/pir"
+    },
+    {
+      "id": "97972018-26e1-4b8b-a30d-8ea48236c12a",
+      "ts": "2026-05-18T08:05:53.115046+00:00",
+      "session_id": "sess-emma-1",
+      "channel": "web",
+      "role": "user",
+      "text": "Yes",
+      "meta": {
+        "kind": "satisfaction_response",
+        "value": "yes"
+      }
+    },
+    {
+      "id": "ce9fe69e-9af2-4b95-8512-c5d070e95690",
+      "ts": "2026-05-18T08:05:53.119840+00:00",
+      "session_id": "sess-luis-2",
+      "channel": "web",
+      "role": "user",
+      "text": "What Erasmus+ projects are available?"
+    },
+    {
+      "id": "d51bbe67-24a1-4ebc-924e-70c0efaf4a98",
+      "ts": "2026-05-18T08:05:55.923122+00:00",
+      "session_id": "sess-luis-2",
+      "channel": "web",
+      "role": "assistant",
+      "text": "Copernicus Berlin offers Erasmus+ projects focused on learning mobility and youth worker development. Key opportunities include:\n\n- **International Seminars**: Non-formal learning through workshops, intercultural debates, role plays, and cultural visits with participants worldwide.\n- Projects supporting **adult education priorities** like inclusiveness, flexible learning, and skills recognition.\n- Initiatives promoting **vocational education and training** aligned with labor market needs and green/digital transitions.\n- Projects addressing **support for learners and staff fleeing the war in Ukraine**, including psycho-social well-being and integration.\n- Emphasis on **environmental sustainability** and behavioral change through education and training.\n\nThese projects aim to empower participants with knowledge, skills, and intercultural experience. You can find videos of past projects on their YouTube channel.\n\nLearn more:\n- https://copernicusberlin.org/en/erasmus-projects\n- https://copernicusberlin.org/en/erasmus"
+    },
+    {
+      "id": "e2d6f5cb-192d-4b11-a78f-750276bc7fe0",
+      "ts": "2026-05-18T08:05:56.330912+00:00",
+      "session_id": "sess-luis-2",
+      "channel": "web",
+      "role": "user",
+      "text": "Yes",
+      "meta": {
+        "kind": "satisfaction_response",
+        "value": "yes"
+      }
+    },
+    {
+      "id": "a0c5b750-f4a4-4c3c-b272-a46f7716f347",
+      "ts": "2026-05-18T08:05:56.335635+00:00",
+      "session_id": "sess-anna-3",
+      "channel": "web",
+      "role": "user",
+      "text": "How can I volunteer with Copernicus Berlin?"
+    },
+    {
+      "id": "eb78370c-5b68-4a85-9256-ca888157cebf",
+      "ts": "2026-05-18T08:05:58.876209+00:00",
+      "session_id": "sess-anna-3",
+      "channel": "web",
+      "role": "assistant",
+      "text": "Volunteering with Copernicus Berlin is a rewarding way to contribute and grow personally and professionally. Here's how you can get involved:\n\n- Prepare a complete chronological CV outlining your education, work experience, and relevant skills.\n- Specify your availability and the estimated duration you can commit to volunteering.\n- Choose your preferred start date for volunteering.\n- Submit your application through the CAMPUS platform, where the team will review and respond.\n\nVolunteering offers skill development, networking, CV enhancement, and a certificate upon completion. If you want to cancel an application later, you can email volunteer@copernicusberlin.org with your application ID.\n\nLet me know if you want details on specific volunteer roles or skills you can develop!\n\nLearn more:\n- https://copernicusberlin.org/en/volunteering\n- https://copernicusberlin.org/en/ies"
+    },
+    {
+      "id": "ed80aa3b-fe56-4b9a-a332-f37633708bf4",
+      "ts": "2026-05-18T08:05:59.285217+00:00",
+      "session_id": "sess-anna-3",
+      "channel": "web",
+      "role": "user",
+      "text": "Do I need German language skills?"
+    },
+    {
+      "id": "50cc30be-b7f0-49ff-8bb8-9eab1ee28924",
+      "ts": "2026-05-18T08:06:02.351313+00:00",
+      "session_id": "sess-anna-3",
+      "channel": "web",
+      "role": "assistant",
+      "text": "For volunteering with Copernicus Berlin, good knowledge of English or German at least at B1 level is generally required. This helps you communicate effectively and participate fully in activities.\n\nFor specific programs like the IES scholarship, either German or English language skills at B1 level are needed, but a formal language certificate is not mandatory for application.\n\nIf you want to join other programs or activities, language requirements may vary, so feel free to ask about a particular program!\n\nWould you like info on language requirements for a specific program?\n\nLearn more:\n- https://copernicusberlin.org/en/ongoing\n- https://copernicusberlin.org/en/ies"
+    },
+    {
+      "id": "87c325c1-89cc-4e3d-8519-282b3f60808f",
+      "ts": "2026-05-18T08:06:02.759235+00:00",
+      "session_id": "sess-anna-3",
+      "channel": "web",
+      "role": "user",
+      "text": "Yes",
+      "meta": {
+        "kind": "satisfaction_response",
+        "value": "yes"
+      }
+    },
+    {
+      "id": "1b282d0d-ecf7-4923-b70a-4af30cf6eb70",
+      "ts": "2026-05-18T08:06:02.763738+00:00",
+      "session_id": "sess-marco-4",
+      "channel": "web",
+      "role": "user",
+      "text": "When is the next application deadline?"
+    },
+    {
+      "id": "2e3996bd-55ae-4682-acc2-40972cadea92",
+      "ts": "2026-05-18T08:06:04.306075+00:00",
+      "session_id": "sess-marco-4",
+      "channel": "web",
+      "role": "assistant",
+      "text": "The next application deadline is October 10, 2024. The application period runs from September 1, 2024 to October 10, 2024.\n\nLearn more:\n- https://copernicusberlin.org/en/ukrainian-talent\n- https://copernicusberlin.org/en/ies"
+    },
+    {
+      "id": "c02f6d84-068c-406d-988c-3199662e1409",
+      "ts": "2026-05-18T08:06:04.714880+00:00",
+      "session_id": "sess-sofia-5",
+      "channel": "web",
+      "role": "user",
+      "text": "How do I contact you?"
+    },
+    {
+      "id": "ad568357-0c71-4618-b411-54e3a7515c80",
+      "ts": "2026-05-18T08:06:06.961814+00:00",
+      "session_id": "sess-sofia-5",
+      "channel": "web",
+      "role": "assistant",
+      "text": "You can contact Copernicus Berlin in several ways:\n\n- Phone: +49 (0) 30 9829 9170 or +49 (0) 176 6242 8816\n- Email: info@copernicusberlin.de\n- Address: Sophienstr. 28/29, 10178 Berlin, Germany\n- Opening hours: Monday to Friday, 09:00 - 17:00\n\nFeel free to reach out with any questions or inquiries!\n\nLearn more:\n- https://copernicusberlin.org/en/contact\n- https://copernicusberlin.org/en/donation"
+    },
+    {
+      "id": "dfae3aac-741d-4cb8-beac-b79e8952974b",
+      "ts": "2026-05-18T08:06:07.369464+00:00",
+      "session_id": "sess-sofia-5",
+      "channel": "web",
+      "role": "user",
+      "text": "No",
+      "meta": {
+        "kind": "satisfaction_response",
+        "value": "no"
+      }
+    },
+    {
+      "id": "ae49fb34-8b89-42c1-9083-a79f775b7cb8",
+      "ts": "2026-05-18T08:06:07.376208+00:00",
+      "session_id": "sess-emma-1",
+      "channel": "web",
+      "role": "user",
+      "text": "Support request\nName: Emma Schmidt\nEmail: emma.schmidt@example.com\nQuestion: Can someone advise me on the IES application?"
+    },
+    {
+      "id": "60eaa6fb-07bf-44f8-9682-f7630530d30f",
+      "ts": "2026-05-18T08:06:07.377690+00:00",
+      "session_id": "sess-emma-1",
+      "channel": "web",
+      "role": "assistant",
+      "text": "Thanks! Your request has been sent to our team — someone will reply to your email shortly."
+    },
+    {
+      "id": "f2adbd50-d56f-4f71-a042-a02fbf4de2de",
+      "ts": "2026-05-18T08:06:07.683027+00:00",
+      "session_id": "sess-luis-2",
+      "channel": "web",
+      "role": "user",
+      "text": "Support request\nName: Luis Rodriguez\nEmail: luis@example.com\nQuestion: Hi, I'd like to partner with Copernicus on a youth project — who should I contact?"
+    },
+    {
+      "id": "9ca95171-f82e-43aa-98aa-410b25d9a82e",
+      "ts": "2026-05-18T08:06:07.684346+00:00",
+      "session_id": "sess-luis-2",
+      "channel": "web",
+      "role": "assistant",
+      "text": "Thanks! Your request has been sent to our team — someone will reply to your email shortly."
+    },
+    {
+      "id": "055810cf-2987-47eb-a7f1-7d8659c35b09",
+      "ts": "2026-05-18T08:06:41.058569+00:00",
+      "session_id": "994a541e-35b8-4c4e-8c3f-96939533ae9a",
+      "channel": "web",
+      "role": "user",
+      "text": "What does Copernicus Berlin do?"
+    },
+    {
+      "id": "af85545e-bc05-4aa0-b26e-a7d89b9853eb",
+      "ts": "2026-05-18T08:06:44.322867+00:00",
+      "session_id": "994a541e-35b8-4c4e-8c3f-96939533ae9a",
+      "channel": "web",
+      "role": "assistant",
+      "text": "Copernicus Berlin is a nonprofit organization based in Berlin that focuses on education and international exchange. They:\n\n- Create scholarships and European/international projects\n- Offer training courses, internships, and exchange opportunities for youth, students, and civil society actors\n- Promote intercultural dialogue and access to education\n- Combine formal and non-formal education with digital innovation and social impact\n- Support youth empowerment and cooperation across Europe and beyond\n\nTheir mission is inspired by Nicolaus Copernicus, symbolizing new perspectives and transformative thought through education and collaboration.\n\nLearn more:\n- https://copernicusberlin.org/en/about-us\n- https://copernicusberlin.org/en/media-about-us"
+    }
+  ]
+}

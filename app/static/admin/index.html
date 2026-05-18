@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Copernicus Berlin — Admin</title>
+  <link rel="icon" type="image/jpeg" href="/admin/logo.jpg" />
+  <link rel="stylesheet" href="/admin/admin.css?v=20260517-5" />
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-logo"><img src="/admin/logo.jpg" alt="Copernicus Berlin" /></div>
+        <div class="brand-text">
+          <div class="brand-title">Copernicus Berlin</div>
+          <div class="brand-sub">Admin dashboard</div>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <a class="nav-item active" data-page="handoffs" href="#">Support requests <span id="handoff-badge" class="badge" style="display:none">0</span></a>
+        <a class="nav-item" data-page="history" href="#">Session history</a>
+        <a class="nav-item" data-page="quick-actions" href="#">Quick actions</a>
+        <a class="nav-item" data-page="faq" href="#">FAQ</a>
+        <a class="nav-item" data-page="link-rules" href="#">Link rules</a>
+        <a class="nav-item" data-page="analytics" href="#">Analytics</a>
+        <a class="nav-item" data-page="reindex" href="#">Reindex</a>
+      </nav>
+    </aside>
+
+    <main class="content">
+
+      <!-- HANDOFFS -->
+      <div class="page" data-page="handoffs">
+        <div class="page-hero">
+          <div class="page-hero-icon">📬</div>
+          <div class="page-hero-text">
+            <h2 class="page-hero-title">Support requests</h2>
+            <p class="page-hero-subtitle">Messages users sent via the “Contact a human” form in the chat widget.</p>
+          </div>
+          <div class="page-hero-actions">
+            <button id="reload-handoffs" class="btn btn-secondary">↻ Reload</button>
+          </div>
+        </div>
+        <section class="card">
+          <div class="filters">
+            <button class="filter active" data-status="">All</button>
+            <button class="filter" data-status="open">Open</button>
+            <button class="filter" data-status="resolved">Resolved</button>
+          </div>
+          <div id="handoffs-list" class="list"></div>
+        </section>
+      </div>
+
+      <!-- HISTORY -->
+      <div class="page" data-page="history" style="display:none">
+        <div class="page-hero">
+          <div class="page-hero-icon">💬</div>
+          <div class="page-hero-text">
+            <h2 class="page-hero-title">Session history</h2>
+            <p class="page-hero-subtitle">Every chat conversation, oldest at the bottom. Click to view the full transcript.</p>
+          </div>
+          <div class="page-hero-actions">
+            <input id="history-search" placeholder="Search…" />
+            <button id="reload-history" class="btn btn-secondary">↻ Reload</button>
+          </div>
+        </div>
+        <section class="card">
+          <div id="history-list" class="list"></div>
+        </section>
+      </div>
+
+      <!-- QUICK ACTIONS -->
+      <div class="page" data-page="quick-actions" style="display:none">
+        <div class="page-hero">
+          <div class="page-hero-icon">⚡</div>
+          <div class="page-hero-text">
+            <h2 class="page-hero-title">Quick actions</h2>
+            <p class="page-hero-subtitle">Suggested questions shown as buttons in the welcome screen of the chat widget.</p>
+          </div>
+          <div class="page-hero-actions">
+            <button id="add-quick-action" class="btn btn-secondary">+ Add</button>
+            <button id="save-quick-actions" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+        <section class="card">
+          <div id="quick-actions-list"></div>
+        </section>
+      </div>
+
+      <!-- FAQ -->
+      <div class="page" data-page="faq" style="display:none">
+        <div class="page-hero">
+          <div class="page-hero-icon">❓</div>
+          <div class="page-hero-text">
+            <h2 class="page-hero-title">FAQ entries</h2>
+            <p class="page-hero-subtitle">Manual Q&amp;A entries merged into the retrieval index alongside crawled site content.</p>
+          </div>
+        </div>
+        <section class="card">
+          <div class="form">
+            <input id="faq-question" placeholder="Question" />
+            <textarea id="faq-answer" rows="4" placeholder="Answer"></textarea>
+            <div class="actions">
+              <button id="save-faq" class="btn btn-primary">Save FAQ</button>
+              <button id="cancel-faq-edit" class="btn btn-ghost" style="display:none">Cancel</button>
+            </div>
+          </div>
+          <div id="faq-list" class="list"></div>
+        </section>
+      </div>
+
+      <!-- LINK RULES -->
+      <div class="page" data-page="link-rules" style="display:none">
+        <div class="page-hero">
+          <div class="page-hero-icon">🔗</div>
+          <div class="page-hero-text">
+            <h2 class="page-hero-title">Link rules</h2>
+            <p class="page-hero-subtitle">Override or disable the bot's “Learn more” link for specific question patterns.</p>
+          </div>
+        </div>
+        <section class="card">
+          <div class="form">
+            <input id="lr-pattern" placeholder="Question contains (e.g. 'scholarship')" />
+            <input id="lr-url" placeholder="Override URL (leave empty if mode=disable)" />
+            <input id="lr-note" placeholder="Internal note (optional)" />
+            <select id="lr-mode">
+              <option value="manual">Manual URL</option>
+              <option value="disable">Disable source links</option>
+            </select>
+            <div class="actions">
+              <button id="save-link-rule" class="btn btn-primary">Save rule</button>
+              <button id="cancel-lr-edit" class="btn btn-ghost" style="display:none">Cancel</button>
+            </div>
+          </div>
+          <div id="link-rules-list" class="list"></div>
+        </section>
+      </div>
+
+      <!-- ANALYTICS -->
+      <div class="page" data-page="analytics" style="display:none">
+        <div class="page-hero">
+          <div class="page-hero-icon">📊</div>
+          <div class="page-hero-text">
+            <h2 class="page-hero-title">Analytics</h2>
+            <p class="page-hero-subtitle">How visitors are using the assistant and what they ask most.</p>
+          </div>
+          <div class="page-hero-actions">
+            <select id="analytics-days">
+              <option value="0">All-time</option>
+              <option value="1">Last 24h</option>
+              <option value="7" selected>Last 7d</option>
+              <option value="30">Last 30d</option>
+            </select>
+            <button id="reload-analytics" class="btn btn-secondary">↻ Reload</button>
+          </div>
+        </div>
+        <section class="card">
+          <div id="analytics-summary" class="metrics"></div>
+        </section>
+        <section class="card">
+          <h3 style="margin:0 0 12px;color:var(--blue);font-size:15px">🏆 Top questions</h3>
+          <div id="analytics-top" class="top-q-list"></div>
+        </section>
+      </div>
+
+      <!-- REINDEX -->
+      <div class="page" data-page="reindex" style="display:none">
+
+        <div class="page-hero">
+          <div class="page-hero-icon">🔄</div>
+          <div class="page-hero-text">
+            <h2 class="page-hero-title">Search index</h2>
+            <p class="page-hero-subtitle">Manage the knowledge base the assistant uses to answer questions.</p>
+          </div>
+          <div class="page-hero-actions">
+            <button id="reload-index-status" class="btn btn-secondary">↻ Refresh</button>
+          </div>
+        </div>
+
+        <section class="card">
+          <div id="index-stats" class="metrics"></div>
+          <div id="index-meta" class="reindex-meta"></div>
+        </section>
+
+        <section class="card">
+          <header class="page-head">
+            <h2>Run reindex</h2>
+          </header>
+          <p class="hint" style="margin-top:-8px">
+            Rebuilds the knowledge base the assistant uses to answer questions.
+            Run this whenever the website is updated, after adding FAQ entries,
+            or if the bot starts answering with outdated information.
+          </p>
+
+          <div class="reindex-options">
+            <label class="reindex-option">
+              <input type="radio" name="reindex-mode" value="full" checked />
+              <div>
+                <div class="opt-title">Full reindex <span class="opt-tag">recommended</span></div>
+                <div class="opt-hint">
+                  Re-crawls every page on copernicusberlin.org/en with a headless
+                  browser, then re-embeds the content. Takes 3–5 minutes. Use this
+                  after the website is updated.
+                </div>
+              </div>
+            </label>
+            <label class="reindex-option">
+              <input type="radio" name="reindex-mode" value="fast" />
+              <div>
+                <div class="opt-title">Re-embed only <span class="opt-tag opt-tag-grey">fast</span></div>
+                <div class="opt-hint">
+                  Skips the website crawl and just rebuilds embeddings from the
+                  previously crawled content. Use after adding FAQ entries or
+                  if you only want to refresh the embedding vectors. ~30 seconds.
+                </div>
+              </div>
+            </label>
+          </div>
+
+          <div class="actions" style="margin-top:14px">
+            <button id="run-reindex" class="btn btn-primary">Start reindex</button>
+            <span id="reindex-status" class="hint" style="display:none"></span>
+          </div>
+          <pre id="reindex-output" class="output" style="display:none"></pre>
+        </section>
+
+        <section class="card">
+          <header class="page-head">
+            <h2>Indexed pages</h2>
+            <span id="index-pages-count" class="hint"></span>
+          </header>
+          <p class="hint" style="margin-top:-8px">
+            These are the pages currently powering the assistant's answers. The
+            assistant cannot answer questions about pages that aren't listed here.
+          </p>
+          <div id="index-pages-list" class="reindex-pages"></div>
+        </section>
+
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Handoff detail modal -->
+  <div id="handoff-modal" class="modal-bg" style="display:none">
+    <div class="modal">
+      <header class="modal-head">
+        <h3>Support request</h3>
+        <button id="close-handoff-modal" class="btn btn-ghost">✕</button>
+      </header>
+      <div id="handoff-detail" class="modal-body"></div>
+      <div class="modal-actions">
+        <input id="handoff-reply" placeholder="Reply to user…" />
+        <button id="send-reply" class="btn btn-primary">Send</button>
+        <button id="toggle-ai" class="btn btn-secondary">Toggle AI</button>
+        <button id="resolve-handoff" class="btn btn-ghost">Resolve</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/admin/admin.js?v=20260517-5"></script>
+</body>
+</html>
