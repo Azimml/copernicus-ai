@@ -243,7 +243,7 @@
       btn.addEventListener("click", function (e) {
         e.stopPropagation();  // don't also open the modal
         var id = btn.getAttribute("data-id");
-        if (!confirm("Delete this resolved request? This cannot be undone.")) return;
+        // No confirm() — deletion is one-click as the admin requested.
         api("/api/admin/handoffs/" + encodeURIComponent(id), { method: "DELETE" })
           .then(function () {
             toast("Request deleted.", "success");
@@ -331,13 +331,16 @@
 
   function resolveHandoff() {
     var h = state.currentHandoff; if (!h) return;
-    var note = prompt("Resolution note (optional):", "");
-    if (note === null) return;
+    // No resolution-note prompt — admin just marks it resolved and moves on.
     api("/api/admin/handoffs/" + encodeURIComponent(h.id) + "/resolve", {
       method: "POST",
-      body: JSON.stringify({ note: note }),
+      body: JSON.stringify({ note: "" }),
     })
-      .then(function () { closeHandoffModal(); loadHandoffs(); })
+      .then(function () {
+        closeHandoffModal();
+        toast("Request resolved.", "success");
+        loadHandoffs();
+      })
       .catch(function (e) { if (!isHandledError(e)) toast(prettyError(e), "error"); });
   }
 
