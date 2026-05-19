@@ -83,6 +83,53 @@
     );
   }
 
+  /* Toast notifications — replaces alert() so we never expose raw HTTP
+   * errors to the admin. Pops a card in the bottom-right that auto-fades. */
+  function toast(message, level) {
+    level = level || "info"; // info | success | error
+    var host = document.getElementById("toast-host");
+    if (!host) {
+      host = document.createElement("div");
+      host.id = "toast-host";
+      host.className = "toast-host";
+      document.body.appendChild(host);
+    }
+    var t = document.createElement("div");
+    t.className = "toast toast-" + level;
+    t.innerHTML =
+      '<span class="toast-icon">' + (level === "error" ? "⚠" : level === "success" ? "✓" : "ℹ") + '</span>' +
+      '<span class="toast-msg"></span>';
+    t.querySelector(".toast-msg").textContent = String(message);
+    host.appendChild(t);
+    // Force a reflow so the entry animation runs.
+    void t.offsetWidth;
+    t.classList.add("toast-show");
+    setTimeout(function () {
+      t.classList.remove("toast-show");
+      setTimeout(function () { if (t.parentNode) t.parentNode.removeChild(t); }, 250);
+    }, 4200);
+  }
+
+  // Pretty-print any error coming back from api() so toasts don't show raw
+  // HTTP / JSON noise. Strips `HTTP 401: {"detail":"..."}` style wrappers.
+  function prettyError(err) {
+    var msg = (err && err.message) || String(err || "Something went wrong");
+    var m = msg.match(/HTTP\s*\d+\s*:\s*(.*)$/);
+    if (m) msg = m[1];
+    // Try JSON.parse to pull out a 'detail' field.
+    try {
+      var parsed = JSON.parse(msg);
+      if (parsed && parsed.detail) msg = parsed.detail;
+    } catch (e) { /* not JSON, keep as-is */ }
+    return msg;
+  }
+
+  // Returns true if api() already handled this error (e.g. 401 → login gate)
+  // so callers can skip showing a redundant toast.
+  function isHandledError(err) {
+    return err && err.message === "Unauthorized";
+  }
+
   function pageHero(opts) {
     var actions = opts.actions || "";
     return (
@@ -156,6 +203,12 @@
       var contact = h.contact || {};
       var name = contact.name || "Anonymous";
       var msgCount = (h.messages || []).length;
+      // Delete button only on resolved requests — open ones must be
+      // answered or resolved first so we don't drop something a user
+      // is still waiting on.
+      var deleteBtn = h.status === "resolved"
+        ? '<button class="request-delete" data-id="' + escapeHTML(h.id) + '" title="Delete this resolved request">✕</button>'
+        : '';
       return (
         '<div class="request-item" data-id="' + escapeHTML(h.id) + '">' +
         avatarFor(name) +
@@ -163,7 +216,10 @@
         '    <div class="request-head">' +
         '      <div><span class="request-name">' + escapeHTML(name) + '</span>' +
         '        <span class="request-email">' + escapeHTML(contact.email || "—") + '</span></div>' +
-        '      <span class="li-status ' + escapeHTML(h.status) + '">' + escapeHTML(h.status) + '</span>' +
+        '      <div class="request-head-right">' +
+        '        <span class="li-status ' + escapeHTML(h.status) + '">' + escapeHTML(h.status) + '</span>' +
+                  deleteBtn +
+        '      </div>' +
         '    </div>' +
         '    <div class="request-message">' + escapeHTML(h.user_message || "—") + '</div>' +
         '    <div class="request-meta">' +
@@ -182,6 +238,21 @@
     $("#handoffs-list").innerHTML = html;
     $$("#handoffs-list .request-item").forEach(function (el) {
       el.addEventListener("click", function () { openHandoff(el.getAttribute("data-id")); });
+    });
+    $$("#handoffs-list .request-delete").forEach(function (btn) {
+      btn.addEventListener("click", function (e) {
+        e.stopPropagation();  // don't also open the modal
+        var id = btn.getAttribute("data-id");
+        if (!confirm("Delete this resolved request? This cannot be undone.")) return;
+        api("/api/admin/handoffs/" + encodeURIComponent(id), { method: "DELETE" })
+          .then(function () {
+            toast("Request deleted.", "success");
+            loadHandoffs();
+          })
+          .catch(function (e) {
+            if (!isHandledError(e)) toast(prettyError(e), "error");
+          });
+      });
     });
   }
 
@@ -205,7 +276,7 @@
         $("#handoff-detail").innerHTML =
           '<p><strong>From:</strong> ' + escapeHTML(contact.name || "Anonymous") +
           ' (<a href="mailto:' + escapeHTML(emailTo) + '">' + escapeHTML(emailTo || "—") + '</a>)</p>' +
-          '<p><strong>Status:</strong> ' + escapeHTML(h.status) + ' · <strong>AI:</strong> ' + (h.ai_enabled ? "enabled" : "disabled") + '</p>' +
+          '<p><strong>Status:</strong> ' + escapeHTML(h.status) + '</p>' +
           '<p class="hint" style="margin-top:6px">✉️ Your reply will be sent as an email to <b>' + escapeHTML(emailTo || "—") + '</b>.</p>' +
           msgs;
         // If we just sent a reply, openHandoff is called with a `last_email`
@@ -226,7 +297,7 @@
           );
         }
       })
-      .catch(function (e) { alert(e.message); });
+      .catch(function (e) { if (!isHandledError(e)) toast(prettyError(e), "error"); });
   }
 
   function closeHandoffModal() {
@@ -254,18 +325,8 @@
         openHandoff(h.id);
         loadHandoffs();
       })
-      .catch(function (e) { alert(e.message); })
+      .catch(function (e) { if (!isHandledError(e)) toast(prettyError(e), "error"); })
       .then(function () { btn.disabled = false; btn.textContent = "Send"; });
-  }
-
-  function toggleAi() {
-    var h = state.currentHandoff; if (!h) return;
-    api("/api/admin/handoffs/" + encodeURIComponent(h.id) + "/ai-mode", {
-      method: "POST",
-      body: JSON.stringify({ ai_enabled: !h.ai_enabled }),
-    })
-      .then(function () { openHandoff(h.id); })
-      .catch(function (e) { alert(e.message); });
   }
 
   function resolveHandoff() {
@@ -277,7 +338,7 @@
       body: JSON.stringify({ note: note }),
     })
       .then(function () { closeHandoffModal(); loadHandoffs(); })
-      .catch(function (e) { alert(e.message); });
+      .catch(function (e) { if (!isHandledError(e)) toast(prettyError(e), "error"); });
   }
 
   /* HISTORY */
@@ -334,7 +395,7 @@
         state.currentHandoff = null;
         var modal = $("#handoff-modal");
         modal.style.display = "flex";
-        // Read-only mode: hide the Reply / Toggle AI / Resolve controls and
+        // Read-only mode: hide the Reply / Resolve controls and
         // rename the header — session history is just a transcript viewer.
         modal.classList.add("modal-readonly");
         var head = modal.querySelector(".modal-head h3");
@@ -348,7 +409,7 @@
                    '</div>';
           }).join("");
       })
-      .catch(function (e) { alert(e.message); });
+      .catch(function (e) { if (!isHandledError(e)) toast(prettyError(e), "error"); });
   }
 
   /* QUICK ACTIONS */
@@ -413,8 +474,8 @@
       method: "PUT",
       body: JSON.stringify({ items: state.quickActions }),
     })
-      .then(function (items) { state.quickActions = items; renderQuickActions(); alert("Saved."); })
-      .catch(function (e) { alert(e.message); });
+      .then(function (items) { state.quickActions = items; renderQuickActions(); toast("Saved.", "success"); })
+      .catch(function (e) { if (!isHandledError(e)) toast(prettyError(e), "error"); });
   }
 
   /* FAQ */
@@ -460,7 +521,7 @@
         if (!confirm("Delete this FAQ?")) return;
         api("/api/admin/faq/" + encodeURIComponent(id), { method: "DELETE" })
           .then(loadFaqs)
-          .catch(function (err) { alert(err.message); });
+          .catch(function (err) { if (!isHandledError(err)) toast(prettyError(err), "error"); });
       });
     });
   }
@@ -478,7 +539,7 @@
         state.editingFaqId = null; $("#cancel-faq-edit").style.display = "none";
         loadFaqs();
       })
-      .catch(function (e) { alert(e.message); });
+      .catch(function (e) { if (!isHandledError(e)) toast(prettyError(e), "error"); });
   }
 
   function cancelFaqEdit() {
@@ -537,7 +598,7 @@
         var id = b.closest(".link-rule").getAttribute("data-id");
         if (!confirm("Delete this rule?")) return;
         api("/api/admin/link-rules/" + encodeURIComponent(id), { method: "DELETE" })
-          .then(loadLinkRules).catch(function (e) { alert(e.message); });
+          .then(loadLinkRules).catch(function (e) { if (!isHandledError(e)) toast(prettyError(e), "error"); });
       });
     });
   }
@@ -559,7 +620,7 @@
         state.editingLinkRuleId = null; $("#cancel-lr-edit").style.display = "none";
         loadLinkRules();
       })
-      .catch(function (e) { alert(e.message); });
+      .catch(function (e) { if (!isHandledError(e)) toast(prettyError(e), "error"); });
   }
 
   function cancelLrEdit() {
@@ -781,7 +842,6 @@
     $("#analytics-days").addEventListener("change", loadAnalytics);
     $("#close-handoff-modal").addEventListener("click", closeHandoffModal);
     $("#send-reply").addEventListener("click", sendReply);
-    $("#toggle-ai").addEventListener("click", toggleAi);
     $("#resolve-handoff").addEventListener("click", resolveHandoff);
 
     $("#save-quick-actions").addEventListener("click", saveQuickActions);

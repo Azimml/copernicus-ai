@@ -687,3 +687,61 @@ textarea { resize: vertical; }
   padding: 8px 12px;
   border-radius: 8px;
 }
+
+/* ===== Toast notifications (replaces alert()) ===== */
+.toast-host {
+  position: fixed;
+  bottom: 24px; right: 24px;
+  z-index: 2000;
+  display: flex; flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+.toast {
+  display: flex; align-items: center; gap: 10px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 18px 12px 14px;
+  min-width: 260px;
+  max-width: 420px;
+  font-size: 14px;
+  box-shadow: 0 10px 30px rgba(10, 37, 64, 0.15);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity .25s ease, transform .25s ease;
+  pointer-events: auto;
+}
+.toast.toast-show { opacity: 1; transform: translateY(0); }
+.toast-icon {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 13px;
+  flex-shrink: 0;
+}
+.toast-msg { color: var(--text); line-height: 1.4; word-break: break-word; }
+.toast.toast-info    .toast-icon { background: #eef3fa;  color: var(--blue); }
+.toast.toast-success .toast-icon { background: #d1fae5;  color: var(--green); }
+.toast.toast-error   { border-color: #fecaca; }
+.toast.toast-error   .toast-icon { background: #fee2e2;  color: var(--red); }
+
+/* ===== Resolved-request ✕ delete button ===== */
+.request-head-right {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.request-delete {
+  background: transparent;
+  border: 0;
+  color: var(--muted);
+  cursor: pointer;
+  width: 26px; height: 26px;
+  border-radius: 8px;
+  font-size: 14px;
+  display: inline-flex; align-items: center; justify-content: center;
+  line-height: 1;
+  transition: background .12s ease, color .12s ease;
+}
+.request-delete:hover { background: #fee2e2; color: var(--red); }

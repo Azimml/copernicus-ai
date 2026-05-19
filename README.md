@@ -28,6 +28,13 @@
 
 ---
 
+> 🌍 **Live deployment:** [copernicus-berlin.xyz](https://copernicus-berlin.xyz) (widget) ·
+> [copernicus-berlin.xyz/admin](https://copernicus-berlin.xyz/admin) (dashboard)
+>
+> Hosted on a Hetzner CPX22 VPS · Cloudflare DNS · Caddy + Let's Encrypt TLS · email replies via Resend.
+
+---
+
 ## ✨ What it does
 
 🤖 &nbsp; **Chat widget** — drops into any page as an iframe. Welcomes visitors,
@@ -108,7 +115,8 @@ make install
 cp .env.example .env
 #   ↳ open .env in your editor and fill in OPENAI_API_KEY
 
-# 4️⃣  crawl the website and build the search index (3–5 min)
+# 4️⃣  (optional) re-crawl the website — only needed if the site has
+#     changed since the pre-built index in `data/` was generated
 make index
 
 # 5️⃣  start the server
@@ -119,9 +127,14 @@ Then open in your browser:
 
 | URL | What it is |
 |---|---|
-| 💬 &nbsp; http://localhost:8000/widget | **Chat widget** — embeddable assistant |
-| 🎛️ &nbsp; http://localhost:8000/admin | **Admin dashboard** — open access on localhost |
+| 💬 &nbsp; http://localhost:8000 | **Chat widget** — also served at `/widget` |
+| 🎛️ &nbsp; http://localhost:8000/admin | **Admin dashboard** — protected by `ADMIN_TOKEN` |
 | 📘 &nbsp; http://localhost:8000/docs | **Swagger API docs** — interactive |
+
+The admin dashboard shows a login screen on first visit — paste the
+`ADMIN_TOKEN` value from your `.env`. The token is saved to the browser's
+localStorage; if it stops matching the server's value, the dashboard
+automatically kicks you back to the login screen.
 
 ---
 
@@ -150,7 +163,7 @@ Seven sections, all open at `/admin`:
 
 | Section | Purpose |
 |---|---|
-| 📬 &nbsp; **Support requests** | Every "Contact a human" submission. Reply directly; the assistant pauses while a human is on the conversation. |
+| 📬 &nbsp; **Support requests** | Every "Contact a human" submission. Reply via email straight from the dashboard (SMTP through Resend by default). Resolved requests can be removed with the `✕` button. |
 | 💬 &nbsp; **Session history** | Every chat session with full transcript, satisfaction ratings, and relative timestamps. |
 | ⚡ &nbsp; **Quick actions** | The suggested-question buttons shown to new visitors. Edit, reorder, enable/disable — changes go live immediately. |
 | ❓ &nbsp; **FAQ** | Manual Q&A entries for topics not yet on the website. Automatically merged into the search index. |
@@ -280,31 +293,39 @@ copernicus-ai/
 
 ---
 
-## 🚆 Deploy to Railway in 5 minutes
+## 🚀 Production deployment
 
-The repo ships with a `Dockerfile` + `railway.toml` so deployment is a
-**one-click** affair.
+The current `copernicus-berlin.xyz` stack runs on a **Hetzner CPX22 VPS**
+(~€4/mo) with **Caddy** auto-issuing Let's Encrypt TLS in front of the
+Docker container. The repo ships everything needed for that setup:
 
-1. Go to **[railway.com](https://railway.com)** → sign in with GitHub.
-2. **New Project** → **Deploy from GitHub repo** → pick `Azimml/copernicus-ai`.
-3. Railway detects the Dockerfile and starts building (~3-5 min on first build).
-4. While it's building, go to **Variables** and paste your `.env` values
-   (at minimum `OPENAI_API_KEY`, `SMTP_HOST`, `SMTP_USER`, `SMTP_PASSWORD`,
-   `SMTP_FROM`, `ADMIN_TOKEN`).
-5. Once the build is green, click **Settings → Networking → Generate Domain**
-   to get a `yourapp.up.railway.app` URL.
-6. (Optional) **Settings → Custom Domain** → add your own domain. Railway
-   gives you a CNAME target; add it to your DNS provider. HTTPS is automatic.
+- `Dockerfile` — builds on top of `mcr.microsoft.com/playwright/python`
+  so Chromium + every system lib it needs is pre-installed
+- `WORKERS=2` default — keeps RAM ~500 MB on a 4 GB VPS
+- Pre-built index in `data/` so the first request works immediately
+- `make migrate` — one-shot import of legacy JSON state into SQLite
 
-The repo's defaults are tuned for Railway's free $5 trial credit:
+Bare-metal recipe (any Debian/Ubuntu VPS):
 
-- `WORKERS=2` keeps RAM around ~500 MB (~$0.20/day on Railway)
-- `healthcheckPath=/api/health` for zero-downtime redeploys
-- SQLite + crawled index ship in the image, so the first request works
-  immediately without running `make index`
+```bash
+# install Docker
+curl -fsSL https://get.docker.com | sh
 
-For long-term production, mount a **volume at `/app/data`** so chat logs,
-support requests, and analytics persist across container restarts.
+# clone and build
+git clone https://github.com/Azimml/copernicus-ai.git
+cd copernicus-ai
+cp .env.example .env  # fill in OPENAI_API_KEY, SMTP_*, ADMIN_TOKEN
+docker build -t copernicus-ai .
+docker run -d --name copernicus --restart unless-stopped \
+  --env-file .env -p 127.0.0.1:8000:8000 copernicus-ai
+
+# add Caddy in front for automatic HTTPS
+echo "your-domain.com { reverse_proxy 127.0.0.1:8000 }" > /etc/caddy/Caddyfile
+systemctl restart caddy
+```
+
+Caddy will fetch a Let's Encrypt cert on first request and renew it
+automatically. Point your DNS A record at the VPS IP and you're live.
 
 ---
 

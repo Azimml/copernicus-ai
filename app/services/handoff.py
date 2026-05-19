@@ -138,6 +138,27 @@ def create_handoff(
     return get_handoff(hid)
 
 
+def delete_handoff(handoff_id: str) -> dict | None:
+    """Permanently delete a handoff (and its messages via FK cascade).
+
+    Only allowed for already-resolved handoffs — open requests should be
+    answered or resolved-with-note first, not silently dropped. Returns the
+    deleted row's status string when successful, None when not found or
+    when the handoff is still open.
+    """
+    with connect() as conn:
+        row = conn.execute(
+            "SELECT status FROM handoffs WHERE id = ?", (handoff_id,)
+        ).fetchone()
+        if row is None:
+            return None
+        if row["status"] != "resolved":
+            return {"status": row["status"], "deleted": False}
+        # handoff_messages has ON DELETE CASCADE so they go with it.
+        conn.execute("DELETE FROM handoffs WHERE id = ?", (handoff_id,))
+    return {"status": "resolved", "deleted": True}
+
+
 def resolve_handoff(handoff_id: str, note: str = "") -> dict | None:
     now = _now_iso()
     with connect() as conn:

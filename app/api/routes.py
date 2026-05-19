@@ -36,6 +36,7 @@ from app.services.handoff import (
     add_operator_reply,
     append_user_message_to_open_handoff,
     create_handoff,
+    delete_handoff,
     get_handoff,
     is_ai_enabled_for_session,
     list_handoffs,
@@ -607,3 +608,25 @@ def admin_handoffs_resolve(
     if not updated:
         raise HTTPException(status_code=404, detail="Handoff not found")
     return updated
+
+
+@router.delete("/admin/handoffs/{handoff_id}")
+def admin_handoffs_delete(
+    handoff_id: str,
+    x_admin_token: str | None = Header(default=None, alias="X-Admin-Token"),
+) -> dict:
+    """Permanently remove a RESOLVED support request from the inbox.
+
+    Open requests cannot be deleted — they must be resolved first so we
+    don't accidentally drop something a user is still waiting on.
+    """
+    _verify_admin_token(x_admin_token)
+    result = delete_handoff(handoff_id)
+    if result is None:
+        raise HTTPException(status_code=404, detail="Handoff not found")
+    if not result.get("deleted"):
+        raise HTTPException(
+            status_code=409,
+            detail="Only resolved requests can be deleted. Resolve it first.",
+        )
+    return {"ok": True}
