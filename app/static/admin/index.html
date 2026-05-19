@@ -5,10 +5,24 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Copernicus Berlin — Admin</title>
   <link rel="icon" type="image/jpeg" href="/admin/logo.jpg" />
-  <link rel="stylesheet" href="/admin/admin.css?v=20260518-3" />
+  <link rel="stylesheet" href="/admin/admin.css?v=20260519-1" />
 </head>
 <body>
-  <div class="app">
+  <!-- Login overlay shown when no valid admin token is stored. -->
+  <div id="login-gate" class="login-gate" style="display:none">
+    <div class="login-card">
+      <div class="login-logo"><img src="/admin/logo.jpg" alt="Copernicus Berlin" /></div>
+      <h1>Copernicus Berlin Admin</h1>
+      <p>Enter the access token to continue.</p>
+      <form id="login-form" autocomplete="off">
+        <input id="login-token" type="password" placeholder="Access token" autofocus />
+        <button class="btn btn-primary" type="submit">Unlock</button>
+      </form>
+      <div id="login-error" class="login-error" style="display:none"></div>
+    </div>
+  </div>
+
+  <div class="app" id="app-shell" style="display:none">
     <aside class="sidebar">
       <div class="brand">
         <div class="brand-logo"><img src="/admin/logo.jpg" alt="Copernicus Berlin" /></div>
@@ -260,6 +274,6 @@
     </div>
   </div>
 
-  <script src="/admin/admin.js?v=20260518-3"></script>
+  <script src="/admin/admin.js?v=20260519-1"></script>
 </body>
 </html>

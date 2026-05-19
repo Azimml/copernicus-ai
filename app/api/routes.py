@@ -315,8 +315,13 @@ def chat_satisfaction(payload: SatisfactionFeedbackRequest) -> dict:
 
 
 def _verify_admin_token(token: str | None) -> None:
-    """Admin auth disabled: the dashboard is open inside the deployment."""
-    return None
+    """Reject requests that don't present the configured ADMIN_TOKEN.
+
+    The token is stored in .env (``ADMIN_TOKEN``) and sent by the admin
+    dashboard as the ``X-Admin-Token`` request header.
+    """
+    if not token or token != settings.admin_token:
+        raise HTTPException(status_code=401, detail="Unauthorized")
 
 
 @router.get("/admin/faq", response_model=List[FAQItem])

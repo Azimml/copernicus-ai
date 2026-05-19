@@ -643,3 +643,47 @@ textarea { resize: vertical; }
   .sidebar { position: sticky; top: 0; z-index: 50; }
   .nav { flex-direction: row; flex-wrap: wrap; }
 }
+
+/* ===== Login gate ===== */
+.login-gate {
+  position: fixed; inset: 0;
+  background: linear-gradient(135deg, var(--blue) 0%, var(--blue-2) 100%);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+.login-gate::before {
+  content: "";
+  position: absolute; inset: 0;
+  background-image: radial-gradient(rgba(255,184,0,0.15) 1px, transparent 1px);
+  background-size: 22px 22px;
+  pointer-events: none;
+}
+.login-card {
+  position: relative;
+  background: #fff;
+  border-radius: 16px;
+  padding: 36px 32px;
+  width: 100%; max-width: 380px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+  text-align: center;
+}
+.login-logo { width: 72px; height: 72px; margin: 0 auto 14px; border-radius: 16px; background: #fff; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.login-logo img { width: 90%; height: 90%; object-fit: contain; }
+.login-card h1 { margin: 0 0 6px; font-size: 20px; color: var(--blue); }
+.login-card p { margin: 0 0 22px; font-size: 14px; color: var(--muted); }
+.login-card form { display: flex; flex-direction: column; gap: 10px; }
+.login-card input {
+  padding: 12px 14px; font-size: 14px;
+  border: 1px solid var(--border); border-radius: 10px;
+}
+.login-card input:focus { border-color: var(--orange); }
+.login-card button { padding: 12px 16px; font-size: 14px; font-weight: 600; }
+.login-error {
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--red);
+  background: #fee2e2;
+  padding: 8px 12px;
+  border-radius: 8px;
+}

@@ -1,7 +1,10 @@
 (function () {
   "use strict";
 
+  var TOKEN_KEY = "cb_admin_token";
+
   var state = {
+    token: (function () { try { return localStorage.getItem(TOKEN_KEY) || ""; } catch (e) { return ""; } })(),
     page: "handoffs",
     handoffs: [],
     handoffsFilter: "",
@@ -20,11 +23,47 @@
   function api(path, opts) {
     opts = opts || {};
     opts.headers = opts.headers || {};
+    if (state.token) opts.headers["X-Admin-Token"] = state.token;
     if (opts.body && !opts.headers["Content-Type"]) opts.headers["Content-Type"] = "application/json";
     return fetch(path, opts).then(function (r) {
+      if (r.status === 401) {
+        // Token rejected — kick back to login.
+        try { localStorage.removeItem(TOKEN_KEY); } catch (e) {}
+        state.token = "";
+        showLoginGate("Access token rejected. Please re-enter.");
+        throw new Error("Unauthorized");
+      }
       if (!r.ok) return r.text().then(function (t) { throw new Error("HTTP " + r.status + ": " + t); });
       var ct = r.headers.get("content-type") || "";
       return ct.indexOf("application/json") >= 0 ? r.json() : r.text();
+    });
+  }
+
+  function showLoginGate(errorMsg) {
+    $("#login-gate").style.display = "flex";
+    $("#app-shell").style.display = "none";
+    var err = $("#login-error");
+    if (errorMsg) { err.textContent = errorMsg; err.style.display = ""; }
+    else err.style.display = "none";
+    setTimeout(function () { var inp = $("#login-token"); if (inp) inp.focus(); }, 50);
+  }
+
+  function hideLoginGate() {
+    $("#login-gate").style.display = "none";
+    $("#app-shell").style.display = "";
+  }
+
+  function attemptLogin(token) {
+    // Validate by calling a cheap admin endpoint with the candidate token.
+    return fetch("/api/admin/handoffs?limit=1", {
+      headers: { "X-Admin-Token": token },
+    }).then(function (r) {
+      if (r.status === 401) throw new Error("Wrong token");
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      state.token = token;
+      try { localStorage.setItem(TOKEN_KEY, token); } catch (e) {}
+      hideLoginGate();
+      loadHandoffs();
     });
   }
 
@@ -758,7 +797,29 @@
     var reloadIdx = $("#reload-index-status");
     if (reloadIdx) reloadIdx.addEventListener("click", loadIndexStatus);
 
-    // Open access — load handoffs immediately.
-    loadHandoffs();
+    // Login gate handler
+    $("#login-form").addEventListener("submit", function (e) {
+      e.preventDefault();
+      var tok = $("#login-token").value.trim();
+      if (!tok) return;
+      var btn = e.target.querySelector("button");
+      btn.disabled = true; btn.textContent = "Checking…";
+      attemptLogin(tok)
+        .catch(function (err) {
+          var msg = $("#login-error");
+          msg.textContent = err.message === "Wrong token" ? "Wrong access token — try again." : "Login failed: " + err.message;
+          msg.style.display = "";
+        })
+        .then(function () { btn.disabled = false; btn.textContent = "Unlock"; });
+    });
+
+    // Initial decision: if we have a stored token, try it. Otherwise show the gate.
+    if (state.token) {
+      attemptLogin(state.token).catch(function () {
+        showLoginGate("Saved token no longer valid. Please re-enter.");
+      });
+    } else {
+      showLoginGate();
+    }
   });
 })();

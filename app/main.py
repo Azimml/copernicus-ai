@@ -79,6 +79,13 @@ def _widget_asset(path: str) -> FileResponse:
     return FileResponse(path, headers=_NO_CACHE)
 
 
+@app.get("/", include_in_schema=False)
+async def root_widget() -> FileResponse:
+    # Root URL serves the chat widget directly so visitors can hit
+    # https://copernicus-berlin.xyz and immediately see the assistant.
+    return _widget_asset("app/static/widget/index.html")
+
+
 @app.get("/admin", include_in_schema=False)
 @app.get("/admin/", include_in_schema=False)
 async def admin_index() -> FileResponse:
