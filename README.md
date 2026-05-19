@@ -4,7 +4,7 @@
   <h1>Copernicus Berlin — AI Assistant</h1>
 
   <p>
-    <b>An embeddable chat assistant for <a href="https://copernicusberlin.org">copernicusberlin.org</a></b><br>
+    <b>An embeddable chat assistant for <a href="https://copernicus-berlin.xyz">Copernicus Berlin</a></b><br>
     Answers visitor questions about programs, scholarships, events, and how to get involved —
     with a built-in admin dashboard for monitoring conversations and managing the knowledge base.
   </p>
