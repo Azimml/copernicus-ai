@@ -89,6 +89,17 @@ def _drop_repeated_lines(docs: list[PageDocument]) -> list[PageDocument]:
     return cleaned
 
 
+_JUNK_PATH_RE = re.compile(
+    # Reject URL paths that look like accidental text-as-link captures:
+    #   • a path segment containing a dot (e.g. /en/Use.ngo, /en/anubisegypt.com)
+    #   • a segment that's a single uppercase letter or N/A-style placeholders
+    #   • paths with uppercase letters (real routes are all-lowercase kebab-case)
+    r"(/[^/]*\.[^/]+)"      # any segment with a dot in it
+    r"|(/N/[A-Z]+)"          # /N/A and friends
+    r"|(/[A-Z][^/]*)",       # any segment starting with uppercase letter
+)
+
+
 def _link_is_allowed(url: str, root_netloc: str, excluded_hosts: set[str]) -> bool:
     parsed = urlparse(url)
     if not parsed.scheme.startswith("http"):
@@ -100,6 +111,12 @@ def _link_is_allowed(url: str, root_netloc: str, excluded_hosts: set[str]) -> bo
         return False
     # Only English routes.
     if not (parsed.path == "/en" or parsed.path.startswith("/en/")):
+        return False
+    # Reject obvious junk paths the site occasionally embeds as link-looking
+    # text (e.g. "Use.ngo", "N/A", "anubisegypt.com") — these surface as
+    # empty pages that pollute the retrieval index.
+    after_en = parsed.path[len("/en"):]
+    if after_en and _JUNK_PATH_RE.search(after_en):
         return False
     return True
 
@@ -169,7 +186,10 @@ def crawl_site() -> list[PageDocument]:
                 continue
 
             text, title = _extract_text(html)
-            if text and len(text) > 80:
+            # Bump min-text threshold from 80 → 250 chars. 80 was too generous
+            # — empty "page not found" pages and stub redirects often weigh
+            # in around 80-100 chars and have nothing useful to index.
+            if text and len(text) > 250:
                 docs.append(PageDocument(url=current, language="en", title=title, text=text))
                 print(f"[crawl] {current} — {len(text)} chars")
 

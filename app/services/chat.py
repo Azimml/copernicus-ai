@@ -242,8 +242,34 @@ class ChatService:
         if not low:
             return True
         greetings = {"hi", "hello", "hey", "thanks", "thank you", "ok", "okay", "good morning",
-                     "good afternoon", "good evening", "yes", "no", "cool", "great"}
-        return low in greetings
+                     "good afternoon", "good evening", "yes", "no", "cool", "great", "sup",
+                     "yo", "hola", "salut", "hallo", "good day", "morning", "afternoon",
+                     "evening", "good night", "bye", "goodbye", "see you"}
+        extras = {"there", "guys", "everyone", "team"}
+
+        def _is_greeting_token(tok: str) -> bool:
+            # A token counts as smalltalk if it's a greeting, or any of its
+            # "stretched-letter" variants collapses to one. We try both
+            # collapse-to-single ("hii" → "hi", "helloo" → "helo") and
+            # collapse-3+-to-2 ("heeellooo" → "heello") then check both
+            # variants against the greeting set including known doubles.
+            if tok in greetings or tok in extras:
+                return True
+            single = re.sub(r"(.)\1+", r"\1", tok)
+            if single in greetings or single in extras:
+                return True
+            # Restore common double-letter greetings (helo→hello, godnight→…)
+            for g in greetings | extras:
+                if re.sub(r"(.)\1+", r"\1", g) == single:
+                    return True
+            return False
+
+        if _is_greeting_token(low):
+            return True
+        tokens = [t for t in re.split(r"\W+", low) if t]
+        if 1 <= len(tokens) <= 3 and all(_is_greeting_token(t) for t in tokens):
+            return True
+        return False
 
     def should_force_operator_handoff(self, message: str, session_id: str | None = None) -> bool:
         return False
@@ -276,11 +302,16 @@ class ChatService:
             {"role": "user", "content": message},
         ]
 
-    def _append_source_links(self, answer: str, urls: list[str]) -> str:
+    def _append_source_links(self, answer: str, urls: list[str], confidence: float = 1.0) -> str:
         answer = _strip_inline_sources(answer)
         if not urls:
             return answer
         if _looks_like_no_info(answer) or _looks_like_scope_refusal(answer):
+            return answer
+        # Don't append Learn more for low-confidence answers — when retrieval
+        # is weak the "sources" are typically irrelevant noise (e.g. a
+        # smalltalk message accidentally matching a junk page).
+        if confidence < 0.60:
             return answer
         # 2 links is plenty for the widget; more than that gets noisy.
         bullet = "\n".join(f"- {u}" for u in urls[:2])
@@ -352,7 +383,7 @@ class ChatService:
         if forced_url:
             answer = f"{answer.rstrip()}\n\nMore info: {forced_url}"
         else:
-            answer = self._append_source_links(answer, used_urls)
+            answer = self._append_source_links(answer, used_urls, confidence=confidence)
 
         self._memory.add_turn(session_id or "", "user", message)
         self._memory.add_turn(session_id or "", "assistant", answer)
@@ -394,6 +425,11 @@ class ChatService:
 
         chunks = self._retriever.query(message, "en", k=settings.retrieval_top_k)
         context_block, used_urls = self._build_context_block(chunks)
+        # Same confidence calc as non-stream path — used below to gate
+        # whether we append the "Learn more" tail.
+        stream_confidence = 0.5
+        if chunks:
+            stream_confidence = round(float((chunks[0][1] + 1.0) / 2.0), 3)
         client = self._client_or_raise()
         try:
             stream = client.chat.completions.create(
@@ -438,7 +474,12 @@ class ChatService:
             yield buffer
 
         full = _strip_inline_sources("".join(collected)).strip()
-        if used_urls and not _looks_like_no_info(full) and not _looks_like_scope_refusal(full):
+        if (
+            used_urls
+            and stream_confidence >= 0.60
+            and not _looks_like_no_info(full)
+            and not _looks_like_scope_refusal(full)
+        ):
             tail = "\n\nLearn more:\n" + "\n".join(f"- {u}" for u in used_urls[:2])
             yield tail
             full = full + tail
