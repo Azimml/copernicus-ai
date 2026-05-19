@@ -153,39 +153,41 @@ class Retriever:
 
             combined = (0.6 * sem_norm) + (0.4 * bm25_norm)
 
+            # slug_targets must be defined regardless of whether query_tokens
+            # is empty — it's referenced by the _url_matches_slug closure below.
+            # (Previously this was scoped inside `if query_tokens:` and crashed
+            # with NameError on stopword-only messages like "how are you".)
+            slug_aliases = {
+                "ies": ["/ies"],
+                "pir": ["/pir"],
+                "lf": ["/lf"],
+                "summer": ["/summer"],
+                "ongoing": ["/ongoing"],
+                "ukrainian": ["/ukrainian-talent"],
+                "ukraine": ["/ukrainian-talent"],
+                "leaders": ["/lf"],
+                "erasmus": ["/erasmus", "/erasmus-projects"],
+                "ka2": ["/ka2"],
+                "volunteer": ["/volunteering"],
+                "volunteering": ["/volunteering"],
+                "hackathon": ["/hackathons", "/hack", "/ai-finance-hackathon"],
+                "donation": ["/donation"],
+                "donate": ["/donation"],
+                "team": ["/our-team"],
+                "history": ["/our-history"],
+                "contact": ["/contact", "/imprint"],
+                "career": ["/career", "/job-vacancy"],
+                "job": ["/job-vacancy", "/career"],
+                "vacancy": ["/job-vacancy"],
+                "comics": ["/cobi-studio/comics"],
+                "stickers": ["/cobi-studio/stickers"],
+                "postcards": ["/cobi-studio/postcards"],
+                "cobi": ["/cobi-studio"],
+            }
+            slug_targets: list[str] = []
+
             if query_tokens:
                 q_set = set(query_tokens)
-                # Map common topic words to their canonical URL slug so a query
-                # like "IES scholarship" boosts chunks from /en/ies specifically
-                # and avoids mixing in numbers from /en/pir or /en/summer.
-                slug_aliases = {
-                    "ies": ["/ies"],
-                    "pir": ["/pir"],
-                    "lf": ["/lf"],
-                    "summer": ["/summer"],
-                    "ongoing": ["/ongoing"],
-                    "ukrainian": ["/ukrainian-talent"],
-                    "ukraine": ["/ukrainian-talent"],
-                    "leaders": ["/lf"],
-                    "erasmus": ["/erasmus", "/erasmus-projects"],
-                    "ka2": ["/ka2"],
-                    "volunteer": ["/volunteering"],
-                    "volunteering": ["/volunteering"],
-                    "hackathon": ["/hackathons", "/hack", "/ai-finance-hackathon"],
-                    "donation": ["/donation"],
-                    "donate": ["/donation"],
-                    "team": ["/our-team"],
-                    "history": ["/our-history"],
-                    "contact": ["/contact", "/imprint"],
-                    "career": ["/career", "/job-vacancy"],
-                    "job": ["/job-vacancy", "/career"],
-                    "vacancy": ["/job-vacancy"],
-                    "comics": ["/cobi-studio/comics"],
-                    "stickers": ["/cobi-studio/stickers"],
-                    "postcards": ["/cobi-studio/postcards"],
-                    "cobi": ["/cobi-studio"],
-                }
-                slug_targets: list[str] = []
                 for tok in q_set:
                     for slug in slug_aliases.get(tok, []):
                         if slug not in slug_targets:
